@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>{% block title %}CineMind AI{% endblock %}</title>
+
+<!-- Bootstrap & Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* =========================================================
+   THEME VARIABLES – CINEMIND AI
+========================================================= */
+:root{
+  --primary:#ff3d5a;
+  --secondary:#ffb703;
+  --accent:#00f5d4;
+  --dark:#06070f;
+  --glass:rgba(255,255,255,.08);
+  --border:rgba(255,255,255,.18);
+}
+
+/* GLOBAL RESET */
+html,body{
+  margin:0;
+  padding:0;
+  width:100vw;
+  overflow-x:hidden;
+  font-family:"Poppins",sans-serif;
+  background:
+    radial-gradient(circle at top, #12142b, #06070f);
+  color:#eef4ff;
+}
+
+/* REMOVE SIDE GAP */
+.navbar>.container-fluid{
+  padding-left:48px!important;
+  padding-right:48px!important;
+}
+
+/* =========================================================
+   LOGO – CINEMA REEL ANIMATION
+========================================================= */
+.logo-cine{
+  width:46px;
+  height:46px;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+  box-shadow:0 0 30px rgba(255,61,90,.7);
+  animation: spinFloat 4s ease-in-out infinite;
+}
+.logo-cine i{
+  font-size:1.6rem;
+  color:#000;
+}
+@keyframes spinFloat{
+  0%,100%{transform:translateY(0) rotate(0deg)}
+  50%{transform:translateY(-6px) rotate(6deg)}
+}
+
+/* =========================================================
+   NAVBAR – PREMIUM GLASS
+========================================================= */
+.navbar{
+  background:rgba(8,10,30,.55);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,.12);
+  transition:.35s;
+}
+.navbar:hover{
+  background:rgba(10,12,45,.85);
+  box-shadow:0 0 35px rgba(255,61,90,.35);
+}
+
+.navbar-brand{
+  font-weight:800;
+  letter-spacing:.8px;
+  color:#fff!important;
+}
+
+.nav-link{
+  color:#dbe7ff!important;
+  margin:0 14px;
+  position:relative;
+  transition:.35s;
+}
+.nav-link:hover{
+  color:var(--secondary)!important;
+}
+.nav-link::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:-7px;
+  width:0;
+  height:2px;
+  background:linear-gradient(90deg,var(--primary),var(--secondary));
+  transition:.4s;
+}
+.nav-link:hover::after{width:100%}
+
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+.main-wrapper{
+  width:100%;
+  margin:0;
+  padding:0;
+}
+
+/* =========================================================
+   BACK TO TOP – FLOATING
+========================================================= */
+#backToTop{
+  position:fixed;
+  right:22px;
+  bottom:26px;
+  width:54px;
+  height:54px;
+  border-radius:16px;
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+  display:none;
+  align-items:center;
+  justify-content:center;
+  color:#000;
+  font-size:1.5rem;
+  cursor:pointer;
+  box-shadow:0 0 32px rgba(255,61,90,.8);
+  z-index:9999;
+  animation: floatBtn 3s infinite ease-in-out;
+}
+@keyframes floatBtn{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-9px)}
+}
+
+/* =========================================================
+   FOOTER – CINEMATIC FLOW
+========================================================= */
+footer{
+  position:relative;
+  background:linear-gradient(180deg,#06070f,#0c0f2d);
+  overflow:hidden;
+  margin-top:90px;
+}
+
+/* Animated Light Wave */
+.footer-wave{
+  position:absolute;
+  top:-50px;
+  left:0;
+  width:220%;
+  height:180px;
+  animation: moveWave 16s linear infinite;
+  opacity:.55;
+}
+@keyframes moveWave{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
+
+.footer-glass{
+  position:relative;
+  z-index:2;
+  padding:70px 24px 18px;
+  backdrop-filter:blur(7px);
+}
+
+.footer-grid{
+  max-width:1200px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:30px;
+}
+
+.footer-grid h5{
+  color:#fff;
+  margin-bottom:16px;
+}
+
+.footer-grid p,
+.footer-grid a{
+  color:#cfe3ff;
+  text-decoration:none;
+  font-size:.95rem;
+  transition:.3s;
+}
+
+.footer-grid a:hover{
+  color:var(--secondary);
+  transform:translateX(6px);
+}
+
+/* Social Icons */
+.social-icons a{
+  font-size:1.4rem;
+  margin-right:14px;
+  color:#fff;
+}
+.social-icons a:hover{
+  color:var(--accent);
+  transform:scale(1.15);
+}
+
+.footer-bottom{
+  text-align:center;
+  border-top:1px solid rgba(255,255,255,.1);
+  padding:16px;
+  font-size:.9rem;
+  color:#9fdcff;
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .footer-grid{grid-template-columns:1fr}
+}
+</style>
+
+{% block head_extra %}{% endblock %}
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container-fluid">
+
+    <a class="navbar-brand d-flex align-items-center gap-2" href="{{ url_for('index') }}">
+      <div class="logo-cine">
+        <i class="bi bi-film"></i>
+      </div>
+      CineMind AI
+    </a>
+
+    <button class="navbar-toggler text-light" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <i class="bi bi-list fs-3"></i>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto align-items-center">
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('contact') }}">Contact</a></li>
+      </ul>
+    </div>
+
+  </div>
+</nav>
+
+<!-- ================= MAIN ================= -->
+<div class="main-wrapper">
+  {% block content %}{% endblock %}
+</div>
+
+<!-- BACK TO TOP -->
+<div id="backToTop"><i class="bi bi-chevron-up"></i></div>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <svg class="footer-wave" viewBox="0 0 1440 120" preserveAspectRatio="none">
+    <path fill="#ff3d5a" fill-opacity="0.28"
+      d="M0,64L120,53C240,43,480,32,720,53C960,75,1200,117,1320,138L1440,160L1440,0L0,0Z">
+    </path>
+  </svg>
+
+  <div class="footer-glass">
+    <div class="footer-grid">
+      <div>
+        <h5>CineMind AI</h5>
+        <p>AI-powered movie recommendation system that understands your taste and delivers personalized cinematic experiences.</p>
+      </div>
+
+      <div>
+        <h5>Quick Links</h5>
+        <p><a href="{{ url_for('index') }}">Home</a></p>
+        <p><a href="{{ url_for('dashboard') }}">Dashboard</a></p>
+        <p><a href="{{ url_for('about') }}">About</a></p>
+        <p><a href="{{ url_for('contact') }}">Contact</a></p>
+      </div>
+
+      <div>
+        <h5>Connect</h5>
+        <div class="social-icons">
+          <a href="#"><i class="bi bi-youtube"></i></a>
+          <a href="#"><i class="bi bi-facebook"></i></a>
+          <a href="#"><i class="bi bi-twitter-x"></i></a>
+          <a href="#"><i class="bi bi-github"></i></a>
+          <a href="#"><i class="bi bi-linkedin"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      © 2025 CineMind AI — Smart Movie Recommendation System
+    </div>
+  </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+window.addEventListener("scroll",()=>{
+  document.getElementById("backToTop").style.display =
+    window.scrollY>300?"flex":"none";
+});
+document.getElementById("backToTop").onclick=()=>{
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+</script>
+
+{% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,1620 @@
+{% extends 'base.html' %}
+{% block title %}Home — Movie Recommendation System{% endblock %}
+{% block content %}
+
+
+<!-- ================= HERO SECTION (CINEMATIC CAROUSEL) ================= -->
+<section id="hero" class="hero-section">
+
+  <!-- ===== HERO STYLES ===== -->
+  <style>
+    /* HERO BASE */
+    .hero-section {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* CAROUSEL IMAGE */
+    .hero-slide {
+      height: 100vh;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    /* DARK + GRADIENT OVERLAY */
+    .hero-slide::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(
+          120deg,
+          rgba(5, 6, 20, 0.85),
+          rgba(15, 10, 40, 0.7),
+          rgba(5, 6, 20, 0.9)
+        );
+      z-index: 1;
+    }
+
+    /* HERO CONTENT */
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    .hero-content h1 {
+      font-size: clamp(2.6rem, 5vw, 4.2rem);
+      font-weight: 800;
+      background: linear-gradient(90deg, #ff3d5a, #ffb703, #00f5d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: glowText 3s ease-in-out infinite;
+    }
+
+    @keyframes glowText {
+      0%, 100% { filter: drop-shadow(0 0 6px rgba(255,61,90,.4)); }
+      50% { filter: drop-shadow(0 0 16px rgba(255,183,3,.8)); }
+    }
+
+    .hero-content p {
+      font-size: 1.15rem;
+      color: #dbe7ff;
+      max-width: 720px;
+      margin: 20px auto 34px;
+      line-height: 1.7;
+    }
+
+    /* CTA BUTTONS */
+    .hero-btn {
+      padding: 14px 34px;
+      border-radius: 50px;
+      font-weight: 600;
+      letter-spacing: .5px;
+      transition: all .35s ease;
+    }
+
+    .btn-primary-hero {
+      background: linear-gradient(135deg, #ff3d5a, #ff006e);
+      border: none;
+      box-shadow: 0 0 30px rgba(255,61,90,.6);
+    }
+
+    .btn-primary-hero:hover {
+      transform: translateY(-4px) scale(1.04);
+      box-shadow: 0 0 45px rgba(255,61,90,.9);
+    }
+
+    .btn-outline-hero {
+      border: 1px solid rgba(255,255,255,.3);
+      color: #fff;
+      backdrop-filter: blur(6px);
+    }
+
+    .btn-outline-hero:hover {
+      background: rgba(255,255,255,.12);
+      transform: translateY(-4px);
+    }
+
+    /* CAROUSEL TRANSITION */
+    .carousel-fade .carousel-item {
+      transition: opacity 1.2s ease-in-out;
+    }
+  </style>
+
+  <!-- ===== HERO CAROUSEL ===== -->
+  <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="6000">
+
+    <div class="carousel-inner">
+
+      <!-- SLIDE 1 -->
+      <div class="carousel-item active">
+        <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba');">
+          <div class="hero-content">
+            <div>
+              <h1>Discover Movies You’ll Love</h1>
+              <p>AI-powered recommendations crafted uniquely for your taste, mood, and watching habits.</p>
+              <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <a href="{{ url_for('dashboard') }}" class="btn hero-btn btn-primary-hero">
+                  <i class="bi bi-stars me-2"></i>Get Recommendations
+                </a>
+                <a href="{{ url_for('dashboard') }}" class="btn hero-btn btn-outline-hero">
+                  <i class="bi bi-collection-play me-2"></i>Browse Movies
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 2 -->
+      <div class="carousel-item">
+        <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c');">
+          <div class="hero-content">
+            <div>
+              <h1>Your Personal AI Movie Curator</h1>
+              <p>From blockbusters to hidden gems — our AI finds movies you didn’t know you’d love.</p>
+              <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <a href="{{ url_for('dashboard') }}" class="btn hero-btn btn-primary-hero">
+                  Start Exploring
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 3 -->
+      <div class="carousel-item">
+        <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1608170825938-a8ea0305d46c');">
+          <div class="hero-content">
+            <div>
+              <h1>Smarter Recommendations. Better Movies.</h1>
+              <p>Advanced machine learning analyzes genres, themes, and preferences in real time.</p>
+              <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <a href="{{ url_for('dashboard') }}" class="btn hero-btn btn-primary-hero">
+                  Try It Free
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ===== HERO SCRIPT ===== -->
+  <script>
+    // Smooth fade on load
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelector(".hero-section").classList.add("loaded");
+    });
+  </script>
+
+</section>
+<!-- ================= END HERO SECTION ================= -->
+
+
+<!-- ================= WHY CHOOSE US ================= -->
+<section id="why-us" class="why-us-section">
+
+  <!-- ===== SECTION STYLES ===== -->
+  <style>
+    .why-us-section{
+      padding:100px 20px;
+      background:
+        radial-gradient(circle at top, rgba(255,61,90,.15), transparent 60%),
+        radial-gradient(circle at bottom, rgba(0,245,212,.15), transparent 60%);
+    }
+
+    .why-us-title{
+      text-align:center;
+      margin-bottom:70px;
+    }
+
+    .why-us-title h2{
+      font-size:clamp(2.2rem,4vw,3rem);
+      font-weight:800;
+      background:linear-gradient(90deg,#ff3d5a,#ffb703,#00f5d4);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-bottom:12px;
+    }
+
+    .why-us-title p{
+      color:#cfe3ff;
+      max-width:700px;
+      margin:auto;
+      font-size:1.05rem;
+      line-height:1.7;
+    }
+
+    /* GLASS CARD */
+    .why-card{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.18);
+      backdrop-filter:blur(12px);
+      border-radius:22px;
+      padding:40px 30px;
+      height:100%;
+      text-align:center;
+      transition:all .45s ease;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .why-card::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(120deg,transparent,rgba(255,255,255,.15),transparent);
+      transform:translateX(-100%);
+      transition:.6s;
+    }
+
+    .why-card:hover::before{
+      transform:translateX(100%);
+    }
+
+    .why-card:hover{
+      transform:translateY(-14px) scale(1.03);
+      box-shadow:0 0 40px rgba(255,61,90,.35);
+      border-color:rgba(255,61,90,.6);
+    }
+
+    /* ICON */
+    .why-icon{
+      width:70px;
+      height:70px;
+      margin:0 auto 24px;
+      border-radius:18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:2rem;
+      background:linear-gradient(135deg,#ff3d5a,#ffb703);
+      color:#000;
+      box-shadow:0 0 30px rgba(255,61,90,.7);
+      animation:floatIcon 3s ease-in-out infinite;
+    }
+
+    @keyframes floatIcon{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-8px)}
+    }
+
+    .why-card h4{
+      font-weight:700;
+      margin-bottom:14px;
+      color:#fff;
+    }
+
+    .why-card p{
+      font-size:.98rem;
+      color:#dbe7ff;
+      line-height:1.7;
+    }
+
+    /* RESPONSIVE */
+    @media(max-width:768px){
+      .why-us-section{padding:70px 18px}
+    }
+  </style>
+
+  <!-- ===== SECTION CONTENT ===== -->
+  <div class="container">
+
+    <div class="why-us-title">
+      <h2>Why Choose CineMind AI?</h2>
+      <p>
+        Built with cutting-edge AI, designed for movie lovers.
+        We don’t just recommend movies — we understand your taste.
+      </p>
+    </div>
+
+    <div class="row g-4">
+
+      <!-- CARD 1 -->
+      <div class="col-lg-3 col-md-6">
+        <div class="why-card">
+          <div class="why-icon">
+            <i class="bi bi-stars"></i>
+          </div>
+          <h4>Personalized AI Suggestions</h4>
+          <p>
+            Our AI analyzes genres, themes, and descriptions to deliver
+            recommendations uniquely tailored to you.
+          </p>
+        </div>
+      </div>
+
+      <!-- CARD 2 -->
+      <div class="col-lg-3 col-md-6">
+        <div class="why-card">
+          <div class="why-icon">
+            <i class="bi bi-lightning-charge-fill"></i>
+          </div>
+          <h4>Real-Time Recommendations</h4>
+          <p>
+            Get instant movie suggestions without waiting —
+            no heavy training, just smart similarity detection.
+          </p>
+        </div>
+      </div>
+
+      <!-- CARD 3 -->
+      <div class="col-lg-3 col-md-6">
+        <div class="why-card">
+          <div class="why-icon">
+            <i class="bi bi-emoji-smile-fill"></i>
+          </div>
+          <h4>Genre & Mood Based Search</h4>
+          <p>
+            Feeling romantic, adventurous, or nostalgic?
+            Discover movies that perfectly match your mood.
+          </p>
+        </div>
+      </div>
+
+      <!-- CARD 4 -->
+      <div class="col-lg-3 col-md-6">
+        <div class="why-card">
+          <div class="why-icon">
+            <i class="bi bi-speedometer2"></i>
+          </div>
+          <h4>Lightning Fast Performance</h4>
+          <p>
+            Optimized algorithms ensure smooth and fast performance
+            across all devices and network conditions.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== SECTION SCRIPT ===== -->
+  <script>
+    // Subtle reveal animation on scroll
+    const whyCards = document.querySelectorAll(".why-card");
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.style.opacity = 1;
+          entry.target.style.transform = "translateY(0)";
+        }
+      });
+    }, { threshold: 0.15 });
+
+    whyCards.forEach(card => {
+      card.style.opacity = 0;
+      card.style.transform = "translateY(40px)";
+      revealObserver.observe(card);
+    });
+  </script>
+
+</section>
+<!-- ================= END WHY CHOOSE US ================= -->
+
+
+<!-- ================= HOW IT WORKS ================= -->
+<section id="how-it-works" class="how-section">
+
+  <!-- ===== SECTION STYLES ===== -->
+  <style>
+    .how-section{
+      padding:110px 20px;
+      position:relative;
+      background:
+        linear-gradient(180deg, transparent, rgba(255,61,90,.08), transparent);
+    }
+
+    .how-title{
+      text-align:center;
+      margin-bottom:80px;
+    }
+
+    .how-title h2{
+      font-size:clamp(2.2rem,4vw,3rem);
+      font-weight:800;
+      background:linear-gradient(90deg,#ff3d5a,#ffb703,#00f5d4);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-bottom:12px;
+    }
+
+    .how-title p{
+      max-width:720px;
+      margin:auto;
+      color:#cfe3ff;
+      font-size:1.05rem;
+      line-height:1.7;
+    }
+
+    /* WORKFLOW CONTAINER */
+    .workflow{
+      max-width:1100px;
+      margin:auto;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:40px;
+      position:relative;
+    }
+
+    /* CONNECTOR LINE */
+    .workflow::before{
+      content:"";
+      position:absolute;
+      top:60px;
+      left:10%;
+      right:10%;
+      height:2px;
+      background:linear-gradient(90deg,#ff3d5a,#ffb703,#00f5d4);
+      opacity:.4;
+    }
+
+    /* STEP CARD */
+    .step-card{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.18);
+      backdrop-filter:blur(12px);
+      border-radius:24px;
+      padding:44px 32px;
+      text-align:center;
+      position:relative;
+      transition:.45s;
+    }
+
+    .step-card:hover{
+      transform:translateY(-14px) scale(1.03);
+      box-shadow:0 0 40px rgba(0,245,212,.35);
+      border-color:rgba(0,245,212,.6);
+    }
+
+    /* STEP ICON */
+    .step-icon{
+      width:76px;
+      height:76px;
+      border-radius:20px;
+      margin:0 auto 26px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:2.2rem;
+      background:linear-gradient(135deg,#ff3d5a,#ffb703);
+      color:#000;
+      box-shadow:0 0 34px rgba(255,61,90,.8);
+      animation:pulseIcon 3s infinite ease-in-out;
+    }
+
+    @keyframes pulseIcon{
+      0%,100%{transform:scale(1)}
+      50%{transform:scale(1.08)}
+    }
+
+    .step-card h4{
+      font-weight:700;
+      color:#fff;
+      margin-bottom:14px;
+    }
+
+    .step-card p{
+      font-size:.98rem;
+      color:#dbe7ff;
+      line-height:1.7;
+    }
+
+    /* STEP NUMBER */
+    .step-number{
+      position:absolute;
+      top:-16px;
+      right:-16px;
+      width:40px;
+      height:40px;
+      border-radius:50%;
+      background:linear-gradient(135deg,#00f5d4,#38bdf8);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:800;
+      color:#000;
+      box-shadow:0 0 20px rgba(0,245,212,.8);
+    }
+
+    /* RESPONSIVE */
+    @media(max-width:900px){
+      .workflow{
+        grid-template-columns:1fr;
+        gap:50px;
+      }
+      .workflow::before{display:none}
+    }
+  </style>
+
+  <!-- ===== SECTION CONTENT ===== -->
+  <div class="container">
+
+    <div class="how-title">
+      <h2>How CineMind AI Works</h2>
+      <p>
+        A seamless three-step process that turns your preferences
+        into perfectly matched movie recommendations.
+      </p>
+    </div>
+
+    <div class="workflow">
+
+      <!-- STEP 1 -->
+      <div class="step-card">
+        <div class="step-number">1</div>
+        <div class="step-icon">
+          <i class="bi bi-sliders"></i>
+        </div>
+        <h4>Select Your Preferences</h4>
+        <p>
+          Choose genres, themes, or a movie you love.
+          The more you interact, the better our AI understands you.
+        </p>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step-card">
+        <div class="step-number">2</div>
+        <div class="step-icon">
+          <i class="bi bi-cpu-fill"></i>
+        </div>
+        <h4>AI Analyzes Patterns</h4>
+        <p>
+          Our intelligent models process descriptions, genres,
+          and similarity patterns using machine learning techniques.
+        </p>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step-card">
+        <div class="step-number">3</div>
+        <div class="step-icon">
+          <i class="bi bi-film"></i>
+        </div>
+        <h4>Get Personalized Movies</h4>
+        <p>
+          Instantly receive a curated list of movies
+          that match your taste — ready to watch and enjoy.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== SECTION SCRIPT ===== -->
+  <script>
+    // Reveal animation on scroll
+    const steps = document.querySelectorAll(".step-card");
+    const stepObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.style.opacity = 1;
+          entry.target.style.transform = "translateY(0)";
+        }
+      });
+    }, { threshold: 0.2 });
+
+    steps.forEach(step => {
+      step.style.opacity = 0;
+      step.style.transform = "translateY(40px)";
+      stepObserver.observe(step);
+    });
+  </script>
+
+</section>
+<!-- ================= END HOW IT WORKS ================= -->
+
+
+<!-- ================= AI ACCURACY & METRICS ================= -->
+<section id="ai-metrics" class="metrics-section">
+
+  <!-- ===== SECTION STYLES ===== -->
+  <style>
+    .metrics-section{
+      padding:120px 20px;
+      background:
+        radial-gradient(circle at left, rgba(0,245,212,.12), transparent 60%),
+        radial-gradient(circle at right, rgba(255,61,90,.15), transparent 60%);
+    }
+
+    .metrics-title{
+      text-align:center;
+      margin-bottom:80px;
+    }
+
+    .metrics-title h2{
+      font-size:clamp(2.2rem,4vw,3rem);
+      font-weight:800;
+      background:linear-gradient(90deg,#ff3d5a,#ffb703,#00f5d4);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-bottom:14px;
+    }
+
+    .metrics-title p{
+      max-width:760px;
+      margin:auto;
+      color:#cfe3ff;
+      font-size:1.05rem;
+      line-height:1.7;
+    }
+
+    /* METRIC CARD */
+    .metric-card{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.18);
+      backdrop-filter:blur(14px);
+      border-radius:24px;
+      padding:38px 30px;
+      height:100%;
+      transition:.45s;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .metric-card:hover{
+      transform:translateY(-14px) scale(1.03);
+      box-shadow:0 0 40px rgba(0,245,212,.4);
+      border-color:rgba(0,245,212,.6);
+    }
+
+    .metric-card h4{
+      font-weight:700;
+      color:#fff;
+      margin-bottom:16px;
+    }
+
+    .metric-card p{
+      font-size:.95rem;
+      color:#dbe7ff;
+      line-height:1.7;
+    }
+
+    /* PROGRESS BAR */
+    .progress{
+      height:10px;
+      background:rgba(255,255,255,.12);
+      border-radius:10px;
+      overflow:hidden;
+    }
+
+    .progress-bar{
+      background:linear-gradient(90deg,#ff3d5a,#ffb703,#00f5d4);
+      width:0%;
+      transition:width 2s ease-in-out;
+    }
+
+    .metric-value{
+      font-weight:700;
+      color:#fff;
+      margin-bottom:8px;
+      display:flex;
+      justify-content:space-between;
+    }
+
+    /* CIRCULAR PROGRESS */
+    .circle-wrap{
+      width:190px;
+      height:190px;
+      margin:auto;
+      border-radius:50%;
+      background:conic-gradient(#00f5d4 0deg, rgba(255,255,255,.1) 0deg);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:0 0 40px rgba(0,245,212,.6);
+      transition:background 2s ease;
+    }
+
+    .circle-inner{
+      width:150px;
+      height:150px;
+      border-radius:50%;
+      background:#06070f;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+    }
+
+    .circle-inner h3{
+      font-size:2.6rem;
+      font-weight:800;
+      color:#00f5d4;
+      margin:0;
+    }
+
+    .circle-inner span{
+      font-size:.9rem;
+      color:#cfe3ff;
+    }
+
+    /* RESPONSIVE */
+    @media(max-width:768px){
+      .circle-wrap{margin-top:40px}
+    }
+  </style>
+
+  <!-- ===== SECTION CONTENT ===== -->
+  <div class="container">
+
+    <div class="metrics-title">
+      <h2>AI Accuracy & Performance</h2>
+      <p>
+        Our recommendation engine continuously improves using
+        content similarity, user interactions, and intelligent filtering.
+      </p>
+    </div>
+
+    <div class="row g-4 align-items-center">
+
+      <!-- LEFT: PROGRESS METRICS -->
+      <div class="col-lg-6">
+
+        <!-- Accuracy -->
+        <div class="metric-card mb-4">
+          <div class="metric-value">
+            <span>Recommendation Accuracy</span>
+            <span class="count" data-count="92">0%</span>
+          </div>
+          <div class="progress">
+            <div class="progress-bar" data-width="92"></div>
+          </div>
+        </div>
+
+        <!-- Satisfaction -->
+        <div class="metric-card mb-4">
+          <div class="metric-value">
+            <span>User Satisfaction</span>
+            <span class="count" data-count="95">0%</span>
+          </div>
+          <div class="progress">
+            <div class="progress-bar" data-width="95"></div>
+          </div>
+        </div>
+
+        <!-- Precision -->
+        <div class="metric-card">
+          <div class="metric-value">
+            <span>Prediction Precision</span>
+            <span class="count" data-count="90">0%</span>
+          </div>
+          <div class="progress">
+            <div class="progress-bar" data-width="90"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: CIRCULAR INDICATOR -->
+      <div class="col-lg-6 text-center">
+        <div class="circle-wrap" id="aiCircle">
+          <div class="circle-inner">
+            <h3 id="circleValue">0%</h3>
+            <span>AI Confidence Score</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== SECTION SCRIPT ===== -->
+  <script>
+    const metricSection = document.getElementById("ai-metrics");
+    const progressBars = document.querySelectorAll(".progress-bar");
+    const counters = document.querySelectorAll(".count");
+    const circle = document.getElementById("aiCircle");
+    const circleValue = document.getElementById("circleValue");
+
+    let animated = false;
+
+    const animateMetrics = () => {
+      if(animated) return;
+      animated = true;
+
+      // Progress bars
+      progressBars.forEach(bar=>{
+        bar.style.width = bar.dataset.width + "%";
+      });
+
+      // Number counters
+      counters.forEach(counter=>{
+        let start = 0;
+        const end = +counter.dataset.count;
+        const interval = setInterval(()=>{
+          start++;
+          counter.textContent = start + "%";
+          if(start >= end) clearInterval(interval);
+        }, 20);
+      });
+
+      // Circular progress
+      let angle = 0;
+      const target = 92 * 3.6;
+      const circleInterval = setInterval(()=>{
+        angle++;
+        circle.style.background =
+          `conic-gradient(#00f5d4 ${angle}deg, rgba(255,255,255,.1) ${angle}deg)`;
+        circleValue.textContent = Math.floor(angle/3.6) + "%";
+        if(angle >= target) clearInterval(circleInterval);
+      }, 15);
+    };
+
+    const metricObserver = new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          animateMetrics();
+        }
+      });
+    }, { threshold: 0.3 });
+
+    metricObserver.observe(metricSection);
+  </script>
+
+</section>
+<!-- ================= END AI ACCURACY & METRICS ================= -->
+
+
+<!-- ================= TESTIMONIALS ================= -->
+<section id="testimonials" class="testimonials-section">
+
+  <!-- ===== SECTION STYLES ===== -->
+  <style>
+    .testimonials-section{
+      padding:120px 20px;
+      background:
+        radial-gradient(circle at top, rgba(255,61,90,.12), transparent 60%),
+        radial-gradient(circle at bottom, rgba(0,245,212,.12), transparent 60%);
+    }
+
+    .testimonials-title{
+      text-align:center;
+      margin-bottom:80px;
+    }
+
+    .testimonials-title h2{
+      font-size:clamp(2.2rem,4vw,3rem);
+      font-weight:800;
+      background:linear-gradient(90deg,#ff3d5a,#ffb703,#00f5d4);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-bottom:14px;
+    }
+
+    .testimonials-title p{
+      max-width:720px;
+      margin:auto;
+      color:#cfe3ff;
+      font-size:1.05rem;
+      line-height:1.7;
+    }
+
+    /* TESTIMONIAL CARD */
+    .testimonial-card{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.18);
+      backdrop-filter:blur(14px);
+      border-radius:26px;
+      padding:44px 38px;
+      max-width:820px;
+      margin:auto;
+      text-align:center;
+      transition:.45s;
+    }
+
+    .testimonial-card:hover{
+      box-shadow:0 0 45px rgba(255,61,90,.4);
+      border-color:rgba(255,61,90,.6);
+      transform:scale(1.02);
+    }
+
+    /* PROFILE IMAGE */
+    .testimonial-avatar{
+      width:90px;
+      height:90px;
+      border-radius:50%;
+      object-fit:cover;
+      border:3px solid rgba(255,255,255,.25);
+      box-shadow:0 0 25px rgba(0,245,212,.5);
+      margin-bottom:20px;
+    }
+
+    /* TEXT */
+    .testimonial-text{
+      font-size:1.05rem;
+      color:#dbe7ff;
+      line-height:1.8;
+      margin-bottom:26px;
+    }
+
+    /* NAME */
+    .testimonial-name{
+      font-weight:700;
+      color:#fff;
+      margin-bottom:4px;
+    }
+
+    .testimonial-role{
+      font-size:.9rem;
+      color:#9fdcff;
+      margin-bottom:14px;
+    }
+
+    /* STARS */
+    .stars i{
+      color:#ffb703;
+      font-size:1.2rem;
+      margin:0 1px;
+    }
+
+    /* CAROUSEL CONTROLS */
+    .carousel-control-prev,
+    .carousel-control-next{
+      width:50px;
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon{
+      filter:invert(1);
+    }
+  </style>
+
+  <!-- ===== SECTION CONTENT ===== -->
+  <div class="container">
+
+    <div class="testimonials-title">
+      <h2>What Our Users Say</h2>
+      <p>
+        Thousands of movie lovers trust CineMind AI to discover
+        films they truly enjoy — here’s what they think.
+      </p>
+    </div>
+
+    <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5500">
+
+      <div class="carousel-inner">
+
+        <!-- TESTIMONIAL 1 -->
+        <div class="carousel-item active">
+          <div class="testimonial-card">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" class="testimonial-avatar" alt="User">
+            <p class="testimonial-text">
+              “CineMind AI recommended movies I would never have found on my own.
+              The suggestions feel incredibly accurate and personalized.”
+            </p>
+            <h5 class="testimonial-name">Rahul Mehta</h5>
+            <div class="testimonial-role">Film Enthusiast</div>
+            <div class="stars">
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- TESTIMONIAL 2 -->
+        <div class="carousel-item">
+          <div class="testimonial-card">
+            <img src="https://randomuser.me/api/portraits/women/44.jpg" class="testimonial-avatar" alt="User">
+            <p class="testimonial-text">
+              “I love how fast the recommendations are.
+              The mood-based suggestions are perfect for weekend movie nights.”
+            </p>
+            <h5 class="testimonial-name">Ananya Sharma</h5>
+            <div class="testimonial-role">OTT Content Creator</div>
+            <div class="stars">
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-half"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- TESTIMONIAL 3 -->
+        <div class="carousel-item">
+          <div class="testimonial-card">
+            <img src="https://randomuser.me/api/portraits/men/75.jpg" class="testimonial-avatar" alt="User">
+            <p class="testimonial-text">
+              “This system feels smarter than most streaming platforms.
+              It actually understands what kind of movies I enjoy.”
+            </p>
+            <h5 class="testimonial-name">Arjun Verma</h5>
+            <div class="testimonial-role">Tech Blogger</div>
+            <div class="stars">
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CONTROLS -->
+      <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- ===== SECTION SCRIPT ===== -->
+  <script>
+    // Pause carousel on hover for better UX
+    const carousel = document.querySelector('#testimonialCarousel');
+    carousel.addEventListener('mouseenter', () => {
+      bootstrap.Carousel.getInstance(carousel).pause();
+    });
+    carousel.addEventListener('mouseleave', () => {
+      bootstrap.Carousel.getInstance(carousel).cycle();
+    });
+  </script>
+
+</section>
+<!-- ================= END TESTIMONIALS ================= -->
+
+
+<!-- ================= FAQ SECTION ================= -->
+<section id="faq" class="faq-section">
+
+  <!-- ===== SECTION STYLES ===== -->
+  <style>
+    .faq-section{
+      padding:120px 20px;
+      background:
+        radial-gradient(circle at left, rgba(255,61,90,.15), transparent 60%),
+        radial-gradient(circle at right, rgba(0,245,212,.12), transparent 60%);
+    }
+
+    .faq-title{
+      text-align:center;
+      margin-bottom:80px;
+    }
+
+    .faq-title h2{
+      font-size:clamp(2.2rem,4vw,3rem);
+      font-weight:800;
+      background:linear-gradient(90deg,#ff3d5a,#ffb703,#00f5d4);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-bottom:14px;
+    }
+
+    .faq-title p{
+      max-width:740px;
+      margin:auto;
+      color:#cfe3ff;
+      font-size:1.05rem;
+      line-height:1.7;
+    }
+
+    /* IMAGE */
+    .faq-image{
+      border-radius:26px;
+      overflow:hidden;
+      box-shadow:0 0 45px rgba(255,61,90,.35);
+      position:relative;
+    }
+
+    .faq-image img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      transition:transform 6s ease;
+    }
+
+    .faq-image:hover img{
+      transform:scale(1.08);
+    }
+
+    .faq-image::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(
+        120deg,
+        rgba(5,6,20,.6),
+        rgba(5,6,20,.85)
+      );
+    }
+
+    /* ACCORDION */
+    .accordion-item{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.18);
+      backdrop-filter:blur(14px);
+      border-radius:18px;
+      overflow:hidden;
+      margin-bottom:18px;
+    }
+
+    .accordion-button{
+      background:transparent;
+      color:#fff;
+      font-weight:600;
+      box-shadow:none;
+    }
+
+    .accordion-button:not(.collapsed){
+      background:rgba(255,255,255,.05);
+      color:#00f5d4;
+    }
+
+    .accordion-button::after{
+      filter:invert(1);
+    }
+
+    .accordion-body{
+      color:#dbe7ff;
+      line-height:1.7;
+      font-size:.98rem;
+    }
+
+    /* RESPONSIVE */
+    @media(max-width:991px){
+      .faq-image{margin-bottom:40px}
+    }
+  </style>
+
+  <!-- ===== SECTION CONTENT ===== -->
+  <div class="container">
+
+    <div class="faq-title">
+      <h2>Frequently Asked Questions</h2>
+      <p>
+        Everything you need to know about how our AI-powered
+        movie recommendation system works.
+      </p>
+    </div>
+
+    <div class="row align-items-center">
+
+      <!-- LEFT: IMAGE -->
+      <div class="col-lg-6">
+        <div class="faq-image">
+          <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba" alt="AI Movie Illustration">
+        </div>
+      </div>
+
+      <!-- RIGHT: ACCORDION -->
+      <div class="col-lg-6">
+        <div class="accordion" id="faqAccordion">
+
+          <!-- Q1 -->
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#faq1">
+                How does the movie recommendation system work?
+              </button>
+            </h2>
+            <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">
+                Our system uses content-based filtering with machine learning techniques
+                such as TF-IDF and cosine similarity to analyze movie descriptions,
+                genres, and themes to recommend similar movies.
+              </div>
+            </div>
+          </div>
+
+          <!-- Q2 -->
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#faq2">
+                Is my watch history and data safe?
+              </button>
+            </h2>
+            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">
+                Yes. We prioritize user privacy. No personal watch history is shared,
+                sold, or exposed. All recommendation processing is secure and anonymized.
+              </div>
+            </div>
+          </div>
+
+          <!-- Q3 -->
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#faq3">
+                Can I get recommendations based on my mood?
+              </button>
+            </h2>
+            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">
+                Absolutely. Our AI understands genre combinations and emotional themes,
+                allowing you to discover movies based on mood such as romance, thrill,
+                comedy, or relaxation.
+              </div>
+            </div>
+          </div>
+
+          <!-- Q4 -->
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#faq4">
+                Is this system free to use?
+              </button>
+            </h2>
+            <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">
+                Yes, the core features are completely free. We also offer optional
+                premium plans with advanced personalization and exclusive features.
+              </div>
+            </div>
+          </div>
+
+          <!-- Q5 -->
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#faq5">
+                What AI technology powers CineMind AI?
+              </button>
+            </h2>
+            <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">
+                CineMind AI uses natural language processing (NLP),
+                vector similarity models, and intelligent ranking algorithms
+                to deliver accurate and explainable movie recommendations.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+<!-- ================= END FAQ SECTION ================= -->
+
+
+<!-- ================= PRICING PLANS ================= -->
+<section id="pricing" class="pricing-section">
+
+  <!-- ===== SECTION STYLES ===== -->
+  <style>
+    .pricing-section{
+      padding:120px 20px;
+      background:
+        radial-gradient(circle at top, rgba(255,61,90,.14), transparent 60%),
+        radial-gradient(circle at bottom, rgba(0,245,212,.14), transparent 60%);
+    }
+
+    .pricing-title{
+      text-align:center;
+      margin-bottom:90px;
+    }
+
+    .pricing-title h2{
+      font-size:clamp(2.2rem,4vw,3rem);
+      font-weight:800;
+      background:linear-gradient(90deg,#ff3d5a,#ffb703,#00f5d4);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-bottom:14px;
+    }
+
+    .pricing-title p{
+      max-width:760px;
+      margin:auto;
+      color:#cfe3ff;
+      font-size:1.05rem;
+      line-height:1.7;
+    }
+
+    /* PRICING CARD */
+    .pricing-card{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.18);
+      backdrop-filter:blur(16px);
+      border-radius:28px;
+      padding:48px 36px;
+      height:100%;
+      text-align:center;
+      transition:.45s;
+      position:relative;
+    }
+
+    .pricing-card:hover{
+      transform:translateY(-16px) scale(1.04);
+      box-shadow:0 0 45px rgba(0,245,212,.35);
+      border-color:rgba(0,245,212,.6);
+    }
+
+    /* POPULAR BADGE */
+    .popular-badge{
+      position:absolute;
+      top:-18px;
+      left:50%;
+      transform:translateX(-50%);
+      background:linear-gradient(135deg,#ff3d5a,#ffb703);
+      color:#000;
+      padding:6px 20px;
+      border-radius:20px;
+      font-size:.85rem;
+      font-weight:700;
+      box-shadow:0 0 25px rgba(255,61,90,.8);
+    }
+
+    .pricing-card h4{
+      font-weight:700;
+      color:#fff;
+      margin-bottom:14px;
+    }
+
+    .price{
+      font-size:2.6rem;
+      font-weight:800;
+      margin-bottom:20px;
+      color:#00f5d4;
+    }
+
+    .price span{
+      font-size:1rem;
+      color:#cfe3ff;
+    }
+
+    .pricing-features{
+      text-align:left;
+      margin:28px 0 34px;
+    }
+
+    .pricing-features li{
+      list-style:none;
+      margin-bottom:12px;
+      color:#dbe7ff;
+      font-size:.95rem;
+    }
+
+    .pricing-features i{
+      color:#00f5d4;
+      margin-right:10px;
+    }
+
+    /* CTA BUTTON */
+    .pricing-btn{
+      padding:14px 34px;
+      border-radius:50px;
+      font-weight:600;
+      transition:.35s;
+      border:none;
+    }
+
+    .btn-outline-price{
+      background:transparent;
+      border:1px solid rgba(255,255,255,.35);
+      color:#fff;
+    }
+
+    .btn-outline-price:hover{
+      background:rgba(255,255,255,.12);
+      transform:scale(1.05);
+    }
+
+    .btn-primary-price{
+      background:linear-gradient(135deg,#ff3d5a,#ff006e);
+      color:#fff;
+      box-shadow:0 0 35px rgba(255,61,90,.7);
+    }
+
+    .btn-primary-price:hover{
+      transform:scale(1.08);
+      box-shadow:0 0 50px rgba(255,61,90,.95);
+    }
+
+    /* RESPONSIVE */
+    @media(max-width:991px){
+      .pricing-card{margin-bottom:30px}
+    }
+  </style>
+
+  <!-- ===== SECTION CONTENT ===== -->
+  <div class="container">
+
+    <div class="pricing-title">
+      <h2>Choose Your Plan</h2>
+      <p>
+        Start free and upgrade anytime.
+        Flexible plans designed for casual viewers and true movie enthusiasts.
+      </p>
+    </div>
+
+    <div class="row g-4">
+
+      <!-- FREE PLAN -->
+      <div class="col-lg-4">
+        <div class="pricing-card">
+          <h4>Free</h4>
+          <div class="price">₹0 <span>/ month</span></div>
+          <ul class="pricing-features">
+            <li><i class="bi bi-check-circle-fill"></i> Basic AI recommendations</li>
+            <li><i class="bi bi-check-circle-fill"></i> Genre-based suggestions</li>
+            <li><i class="bi bi-check-circle-fill"></i> Limited daily searches</li>
+            <li><i class="bi bi-check-circle-fill"></i> Standard response speed</li>
+          </ul>
+          <button class="pricing-btn btn-outline-price">
+            Get Started
+          </button>
+        </div>
+      </div>
+
+      <!-- PRO PLAN -->
+      <div class="col-lg-4">
+        <div class="pricing-card">
+          <div class="popular-badge">Most Popular</div>
+          <h4>Pro</h4>
+          <div class="price">₹199 <span>/ month</span></div>
+          <ul class="pricing-features">
+            <li><i class="bi bi-check-circle-fill"></i> Advanced AI personalization</li>
+            <li><i class="bi bi-check-circle-fill"></i> Mood-based recommendations</li>
+            <li><i class="bi bi-check-circle-fill"></i> Unlimited searches</li>
+            <li><i class="bi bi-check-circle-fill"></i> Faster recommendation engine</li>
+            <li><i class="bi bi-check-circle-fill"></i> Priority support</li>
+          </ul>
+          <button class="pricing-btn btn-primary-price">
+            Upgrade to Pro
+          </button>
+        </div>
+      </div>
+
+      <!-- PREMIUM PLAN -->
+      <div class="col-lg-4">
+        <div class="pricing-card">
+          <h4>Premium</h4>
+          <div class="price">₹399 <span>/ month</span></div>
+          <ul class="pricing-features">
+            <li><i class="bi bi-check-circle-fill"></i> Ultra-accurate AI engine</li>
+            <li><i class="bi bi-check-circle-fill"></i> Deep taste profiling</li>
+            <li><i class="bi bi-check-circle-fill"></i> Early access to new features</li>
+            <li><i class="bi bi-check-circle-fill"></i> Personalized movie insights</li>
+            <li><i class="bi bi-check-circle-fill"></i> Dedicated premium support</li>
+          </ul>
+          <button class="pricing-btn btn-outline-price">
+            Go Premium
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+<!-- ================= END PRICING PLANS ================= -->
+
+
+<!-- ================= FINAL CALL TO ACTION ================= -->
+<section id="final-cta" class="final-cta-section">
+
+  <!-- ===== SECTION STYLES ===== -->
+  <style>
+    .final-cta-section{
+      position:relative;
+      height:90vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+    }
+
+    /* BACKGROUND IMAGE */
+    .final-cta-bg{
+      position:absolute;
+      inset:0;
+      background-image:url('https://images.unsplash.com/photo-1524985069026-dd778a71c7b4');
+      background-size:cover;
+      background-position:center;
+      transform:scale(1.1);
+      animation:slowZoom 18s infinite alternate ease-in-out;
+      z-index:1;
+    }
+
+    @keyframes slowZoom{
+      from{transform:scale(1.1)}
+      to{transform:scale(1.2)}
+    }
+
+    /* DARK OVERLAY */
+    .final-cta-overlay{
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(
+          120deg,
+          rgba(5,6,20,.85),
+          rgba(15,10,40,.8),
+          rgba(5,6,20,.9)
+        );
+      z-index:2;
+    }
+
+    /* CONTENT */
+    .final-cta-content{
+      position:relative;
+      z-index:3;
+      text-align:center;
+      padding:0 20px;
+      max-width:900px;
+    }
+
+    .final-cta-content h2{
+      font-size:clamp(2.6rem,5vw,3.8rem);
+      font-weight:800;
+      background:linear-gradient(90deg,#ff3d5a,#ffb703,#00f5d4);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-bottom:22px;
+      animation:glowText 3s ease-in-out infinite;
+    }
+
+    .final-cta-content p{
+      font-size:1.15rem;
+      color:#dbe7ff;
+      line-height:1.8;
+      margin-bottom:40px;
+    }
+
+    /* CTA BUTTON */
+    .final-cta-btn{
+      padding:16px 44px;
+      border-radius:50px;
+      font-size:1.05rem;
+      font-weight:700;
+      letter-spacing:.6px;
+      border:none;
+      background:linear-gradient(135deg,#ff3d5a,#ff006e);
+      color:#fff;
+      box-shadow:0 0 45px rgba(255,61,90,.75);
+      transition:.4s;
+    }
+
+    .final-cta-btn:hover{
+      transform:translateY(-6px) scale(1.08);
+      box-shadow:0 0 65px rgba(255,61,90,.95);
+    }
+
+    /* RESPONSIVE */
+    @media(max-width:768px){
+      .final-cta-section{height:auto;padding:100px 0}
+    }
+  </style>
+
+  <!-- ===== BACKGROUND ===== -->
+  <div class="final-cta-bg"></div>
+  <div class="final-cta-overlay"></div>
+
+  <!-- ===== CONTENT ===== -->
+  <div class="final-cta-content">
+    <h2>Start Your AI Movie Journey Today</h2>
+    <p>
+      Stop scrolling endlessly and let AI do the work.
+      Discover movies that truly match your taste, mood, and moments —
+      completely personalized for you.
+    </p>
+    <a href="{{ url_for('dashboard') }}" class="btn final-cta-btn">
+      Get Started Free
+    </a>
+  </div>
+
+  <!-- ===== SECTION SCRIPT ===== -->
+  <script>
+    // Fade-in animation on load
+    window.addEventListener("load", () => {
+      document.querySelector(".final-cta-content").style.opacity = 0;
+      document.querySelector(".final-cta-content").style.transform = "translateY(30px)";
+      setTimeout(()=>{
+        document.querySelector(".final-cta-content").style.transition = "all 1s ease";
+        document.querySelector(".final-cta-content").style.opacity = 1;
+        document.querySelector(".final-cta-content").style.transform = "translateY(0)";
+      }, 200);
+    });
+  </script>
+
+</section>
+<!-- ================= END FINAL CTA ================= -->
+
+{% endblock %}

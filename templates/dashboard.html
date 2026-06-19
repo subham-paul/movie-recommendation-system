@@ -1,0 +1,1219 @@
+{% extends "base.html" %}
+{% block title %}Dashboard – CineMind AI{% endblock %}
+
+{% block content %}
+
+<!-- ================= DASHBOARD ================= -->
+<section class="dashboard-section">
+
+  <!-- ===== STYLES ===== -->
+  <style>
+    .dashboard-section{
+      padding:100px 20px;
+      background:
+        radial-gradient(circle at top, rgba(255,61,90,.12), transparent 60%),
+        radial-gradient(circle at bottom, rgba(0,245,212,.12), transparent 60%);
+    }
+
+    .dash-title{
+      text-align:center;
+      margin-bottom:60px;
+    }
+
+    .dash-title h2{
+      font-size:clamp(2.2rem,4vw,3rem);
+      font-weight:800;
+      background:linear-gradient(90deg,#ff3d5a,#ffb703,#00f5d4);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-bottom:14px;
+    }
+
+    .dash-title p{
+      max-width:760px;
+      margin:auto;
+      color:#cfe3ff;
+      font-size:1.05rem;
+      line-height:1.7;
+    }
+
+    /* SEARCH CARD */
+    .search-card{
+      max-width:800px;
+      margin:40px auto 60px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.18);
+      backdrop-filter:blur(14px);
+      border-radius:26px;
+      padding:34px;
+      box-shadow:0 0 35px rgba(255,61,90,.3);
+    }
+
+    .search-card input{
+      background:rgba(0,0,0,.4);
+      border:none;
+      color:#fff;
+      padding:16px;
+      border-radius:14px;
+    }
+
+    .search-card input:focus{
+      outline:none;
+      box-shadow:0 0 0 2px rgba(0,245,212,.4);
+    }
+
+    .search-btn{
+      padding:14px 34px;
+      border-radius:50px;
+      border:none;
+      font-weight:600;
+      background:linear-gradient(135deg,#ff3d5a,#ff006e);
+      color:#fff;
+      box-shadow:0 0 30px rgba(255,61,90,.7);
+      transition:.3s;
+    }
+
+    .search-btn:hover{
+      transform:scale(1.06);
+      box-shadow:0 0 45px rgba(255,61,90,.95);
+    }
+
+    /* LOADER */
+    .loader{
+      display:none;
+      margin:50px auto;
+      width:70px;
+      height:70px;
+      border-radius:50%;
+      border:6px solid rgba(255,255,255,.2);
+      border-top:6px solid #00f5d4;
+      animation:spin 1s linear infinite;
+    }
+
+    @keyframes spin{
+      to{transform:rotate(360deg)}
+    }
+
+    /* MOVIE GRID */
+    .movie-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+      gap:28px;
+    }
+
+    .movie-card{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.18);
+      backdrop-filter:blur(14px);
+      border-radius:24px;
+      padding:26px;
+      transition:.45s;
+      height:100%;
+    }
+
+    .movie-card:hover{
+      transform:translateY(-14px) scale(1.03);
+      box-shadow:0 0 40px rgba(0,245,212,.35);
+      border-color:rgba(0,245,212,.6);
+    }
+
+    .movie-card h5{
+      color:#fff;
+      font-weight:700;
+      margin-bottom:8px;
+    }
+
+    .movie-meta{
+      font-size:.9rem;
+      color:#9fdcff;
+      margin-bottom:10px;
+    }
+
+    .movie-overview{
+      font-size:.95rem;
+      color:#dbe7ff;
+      line-height:1.6;
+      max-height:120px;
+      overflow:hidden;
+    }
+
+    .badge-ai{
+      background:linear-gradient(135deg,#00f5d4,#38bdf8);
+      color:#000;
+      font-size:.75rem;
+      font-weight:700;
+      padding:4px 10px;
+      border-radius:12px;
+      display:inline-block;
+      margin-bottom:10px;
+    }
+  </style>
+
+  <!-- ===== CONTENT ===== -->
+  <div class="container">
+
+    <div class="dash-title">
+      <h2>AI Movie Recommendation Dashboard</h2>
+      <p>
+        Select a movie you love and let our AI discover similar films
+        tailored to your taste.
+      </p>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="search-card">
+      <form id="recommendForm" class="row g-3">
+        <div class="col-md-9">
+          <input
+            list="movieList"
+            name="movie"
+            id="movieInput"
+            class="form-control"
+            placeholder="Start typing a movie name..."
+            required
+          >
+          <datalist id="movieList">
+            {% for movie in movies %}
+              <option value="{{ movie }}"></option>
+            {% endfor %}
+          </datalist>
+        </div>
+        <div class="col-md-3 d-grid">
+          <button class="search-btn" type="submit">
+            Get Recommendations
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- LOADER -->
+    <div class="loader" id="loader"></div>
+
+    <!-- RESULTS -->
+    <div id="results" class="movie-grid"></div>
+
+  </div>
+
+  <!-- ===== SCRIPT ===== -->
+  <script>
+    const form = document.getElementById("recommendForm");
+    const loader = document.getElementById("loader");
+    const results = document.getElementById("results");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      results.innerHTML = "";
+      loader.style.display = "block";
+
+      const movie = document.getElementById("movieInput").value;
+
+      const response = await fetch("/recommend", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "movie=" + encodeURIComponent(movie)
+      });
+
+      loader.style.display = "none";
+
+      const data = await response.json();
+
+      if(data.error){
+        results.innerHTML = `<p class="text-center text-danger">${data.error}</p>`;
+        return;
+      }
+
+      data.forEach(m => {
+        results.innerHTML += `
+          <div class="movie-card">
+            <span class="badge-ai">AI MATCH</span>
+            <h5>${m.title}</h5>
+            <div class="movie-meta">
+              ⭐ ${m.vote_average} &nbsp; | &nbsp;
+              🔥 ${Math.round(m.popularity)} &nbsp; | &nbsp;
+              📅 ${m.release_date}
+            </div>
+            <p class="movie-overview">${m.overview}</p>
+          </div>
+        `;
+      });
+    });
+  </script>
+
+</section>
+<!-- ================= END DASHBOARD ================= -->
+
+<!-- ================= DASHBOARD OVERVIEW CARDS ================= -->
+<section class="overview-section">
+
+  <!-- ===== STYLES ===== -->
+  <style>
+    .overview-section{
+      padding:90px 20px 60px;
+    }
+
+    .overview-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:26px;
+    }
+
+    .overview-card{
+      position:relative;
+      background:rgba(255,255,255,.08);
+      border-radius:22px;
+      padding:30px 26px;
+      backdrop-filter:blur(14px);
+      border:1px solid rgba(255,255,255,.18);
+      overflow:hidden;
+      transition:.45s;
+    }
+
+    /* GRADIENT GLOW BORDER */
+    .overview-card::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:22px;
+      padding:1.5px;
+      background:linear-gradient(
+        120deg,
+        #ff3d5a,
+        #ffb703,
+        #00f5d4
+      );
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor;
+      mask-composite:exclude;
+      opacity:.65;
+    }
+
+    .overview-card:hover{
+      transform:translateY(-14px) scale(1.04);
+      box-shadow:0 0 45px rgba(255,61,90,.45);
+    }
+
+    .overview-icon{
+      width:54px;
+      height:54px;
+      border-radius:14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.6rem;
+      background:linear-gradient(135deg,#ff3d5a,#ffb703);
+      color:#000;
+      margin-bottom:18px;
+      box-shadow:0 0 28px rgba(255,61,90,.7);
+    }
+
+    .overview-title{
+      font-size:.95rem;
+      color:#cfe3ff;
+      margin-bottom:6px;
+    }
+
+    .overview-value{
+      font-size:2.1rem;
+      font-weight:800;
+      color:#fff;
+    }
+
+    .overview-sub{
+      font-size:.8rem;
+      color:#9fdcff;
+      margin-top:6px;
+    }
+  </style>
+
+  <!-- ===== CONTENT ===== -->
+  <div class="container">
+
+    <div class="overview-grid">
+
+      <!-- CARD 1 -->
+      <div class="overview-card" data-bs-toggle="tooltip" title="Movies processed by AI engine">
+        <div class="overview-icon">
+          <i class="bi bi-film"></i>
+        </div>
+        <div class="overview-title">Total Movies Analyzed</div>
+        <div class="overview-value">10,000+</div>
+        <div class="overview-sub">Live dataset coverage</div>
+      </div>
+
+      <!-- CARD 2 -->
+      <div class="overview-card" data-bs-toggle="tooltip" title="Accuracy of AI recommendations">
+        <div class="overview-icon">
+          <i class="bi bi-bullseye"></i>
+        </div>
+        <div class="overview-title">Personalized Accuracy</div>
+        <div class="overview-value">92%</div>
+        <div class="overview-sub">ML similarity matching</div>
+      </div>
+
+      <!-- CARD 3 -->
+      <div class="overview-card" data-bs-toggle="tooltip" title="Average user engagement time">
+        <div class="overview-icon">
+          <i class="bi bi-clock-history"></i>
+        </div>
+        <div class="overview-title">User Watch Time</div>
+        <div class="overview-value">3.4 hrs</div>
+        <div class="overview-sub">Per session average</div>
+      </div>
+
+      <!-- CARD 4 -->
+      <div class="overview-card" data-bs-toggle="tooltip" title="Recommendations generated today">
+        <div class="overview-icon">
+          <i class="bi bi-stars"></i>
+        </div>
+        <div class="overview-title">Active Recommendations</div>
+        <div class="overview-value">1,280</div>
+        <div class="overview-sub">Real-time AI output</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== SCRIPT ===== -->
+  <script>
+    // Enable Bootstrap tooltips
+    document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      .forEach(el => new bootstrap.Tooltip(el));
+  </script>
+
+</section>
+<!-- ================= END OVERVIEW CARDS ================= -->
+
+<!-- ================= RECOMMENDED FOR YOU ================= -->
+<section class="recommended-section">
+
+  <!-- ===== STYLES ===== -->
+  <style>
+    .recommended-section{
+      padding:60px 20px 90px;
+    }
+
+    .section-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:26px;
+      flex-wrap:wrap;
+      gap:14px;
+    }
+
+    .section-header h3{
+      font-size:1.8rem;
+      font-weight:800;
+      color:#fff;
+    }
+
+    .section-header span{
+      color:#9fdcff;
+      font-size:.9rem;
+    }
+
+    /* HORIZONTAL SCROLL */
+    .movie-row{
+      display:flex;
+      gap:22px;
+      overflow-x:auto;
+      padding-bottom:16px;
+      scroll-behavior:smooth;
+    }
+
+    .movie-row::-webkit-scrollbar{
+      height:6px;
+    }
+
+    .movie-row::-webkit-scrollbar-thumb{
+      background:linear-gradient(90deg,#ff3d5a,#00f5d4);
+      border-radius:10px;
+    }
+
+    /* MOVIE CARD */
+    .ai-movie-card{
+      min-width:260px;
+      max-width:260px;
+      background:rgba(255,255,255,.08);
+      backdrop-filter:blur(14px);
+      border-radius:22px;
+      padding:22px;
+      border:1px solid rgba(255,255,255,.18);
+      transition:.45s;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .ai-movie-card:hover{
+      transform:translateY(-12px) scale(1.05);
+      box-shadow:0 0 40px rgba(0,245,212,.45);
+      border-color:rgba(0,245,212,.6);
+    }
+
+    /* AI BADGE */
+    .ai-badge{
+      position:absolute;
+      top:14px;
+      right:14px;
+      background:linear-gradient(135deg,#00f5d4,#38bdf8);
+      color:#000;
+      font-size:.75rem;
+      font-weight:800;
+      padding:4px 10px;
+      border-radius:14px;
+    }
+
+    .ai-score{
+      font-size:.8rem;
+      color:#00f5d4;
+      margin-bottom:6px;
+      font-weight:700;
+    }
+
+    .ai-movie-card h5{
+      font-size:1.05rem;
+      font-weight:700;
+      color:#fff;
+      margin-bottom:10px;
+    }
+
+    /* GENRE TAGS */
+    .genre-tags{
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      margin-bottom:12px;
+    }
+
+    .genre-tag{
+      font-size:.7rem;
+      padding:3px 8px;
+      border-radius:10px;
+      background:rgba(255,255,255,.12);
+      color:#cfe3ff;
+    }
+
+    /* ACTION BUTTONS */
+    .card-actions{
+      display:flex;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .btn-watch{
+      flex:1;
+      border:none;
+      border-radius:20px;
+      font-size:.75rem;
+      padding:8px 10px;
+      font-weight:700;
+      background:linear-gradient(135deg,#ff3d5a,#ff006e);
+      color:#fff;
+      box-shadow:0 0 20px rgba(255,61,90,.7);
+      transition:.3s;
+      text-align:center;
+      text-decoration:none;
+    }
+
+    .btn-watch:hover{
+      transform:scale(1.07);
+      box-shadow:0 0 35px rgba(255,61,90,.95);
+    }
+
+    .btn-fav{
+      width:38px;
+      height:38px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.3);
+      background:transparent;
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:.3s;
+    }
+
+    .btn-fav:hover{
+      background:rgba(255,255,255,.15);
+      color:#ff3d5a;
+      transform:scale(1.1);
+    }
+  </style>
+
+  <!-- ===== CONTENT ===== -->
+  <div class="container">
+
+    <div class="section-header">
+      <h3>Recommended For You</h3>
+      <span>Powered by CineMind AI</span>
+    </div>
+
+    <div class="movie-row">
+
+      {% for movie in movies[:10] %}
+      <div class="ai-movie-card">
+
+        <div class="ai-badge">AI</div>
+
+        <div class="ai-score">
+          Match Score: {{ 85 + loop.index }}%
+        </div>
+
+        <h5>{{ movie }}</h5>
+
+        <div class="genre-tags">
+          <span class="genre-tag">Drama</span>
+          <span class="genre-tag">Thriller</span>
+        </div>
+
+        <div class="card-actions">
+          <!-- IMDb LINK -->
+          <a
+            class="btn-watch"
+            target="_blank"
+            href="https://www.imdb.com/find?q={{ movie | urlencode }}"
+          >
+            IMDb
+          </a>
+
+          <!-- FAVORITE -->
+          <button class="btn-fav" title="Add to Favorites">
+            <i class="bi bi-heart"></i>
+          </button>
+        </div>
+
+      </div>
+      {% endfor %}
+
+    </div>
+
+  </div>
+</section>
+<!-- ================= END RECOMMENDED FOR YOU ================= -->
+
+<!-- ================= TRENDING MOVIES ================= -->
+<section class="trending-section">
+
+  <!-- ===== STYLES ===== -->
+  <style>
+    .trending-section{
+      padding:40px 20px 100px;
+    }
+
+    .trending-title{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:28px;
+      flex-wrap:wrap;
+    }
+
+    .trending-title h3{
+      font-size:1.8rem;
+      font-weight:800;
+      color:#fff;
+    }
+
+    .trending-title span{
+      font-size:.85rem;
+      color:#9fdcff;
+    }
+
+    /* GRID */
+    .trending-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:26px;
+    }
+
+    /* CARD */
+    .trending-card{
+      position:relative;
+      background:rgba(255,255,255,.08);
+      backdrop-filter:blur(14px);
+      border-radius:22px;
+      padding:24px;
+      border:1px solid rgba(255,255,255,.18);
+      transition:.45s;
+      overflow:hidden;
+    }
+
+    .trending-card:hover{
+      transform:translateY(-14px) scale(1.04);
+      box-shadow:0 0 45px rgba(255,61,90,.45);
+      border-color:rgba(255,61,90,.6);
+    }
+
+    /* BADGE */
+    .trending-badge{
+      position:absolute;
+      top:14px;
+      left:14px;
+      background:linear-gradient(135deg,#ff3d5a,#ff006e);
+      color:#fff;
+      font-size:.7rem;
+      font-weight:800;
+      padding:4px 10px;
+      border-radius:14px;
+      box-shadow:0 0 18px rgba(255,61,90,.8);
+    }
+
+    .trending-card h5{
+      font-size:1.05rem;
+      font-weight:700;
+      color:#fff;
+      margin:18px 0 8px;
+    }
+
+    /* RATING */
+    .rating{
+      color:#ffb703;
+      font-size:.9rem;
+      margin-bottom:6px;
+    }
+
+    /* POPULARITY */
+    .popularity{
+      font-size:.8rem;
+      color:#00f5d4;
+      margin-bottom:14px;
+    }
+
+    /* ACTION */
+    .trending-actions{
+      display:flex;
+      gap:10px;
+    }
+
+    .btn-imdb{
+      flex:1;
+      padding:8px;
+      font-size:.75rem;
+      border-radius:18px;
+      border:none;
+      font-weight:700;
+      background:linear-gradient(135deg,#f5c518,#e2aa00);
+      color:#000;
+      text-decoration:none;
+      text-align:center;
+      transition:.3s;
+    }
+
+    .btn-imdb:hover{
+      transform:scale(1.07);
+      box-shadow:0 0 25px rgba(245,197,24,.8);
+    }
+
+    .btn-share{
+      width:36px;
+      height:36px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.3);
+      background:transparent;
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:.3s;
+    }
+
+    .btn-share:hover{
+      background:rgba(255,255,255,.15);
+      transform:scale(1.1);
+    }
+  </style>
+
+  <!-- ===== CONTENT ===== -->
+  <div class="container">
+
+    <div class="trending-title">
+      <h3>🔥 Trending Now</h3>
+      <span>Global audience favorites</span>
+    </div>
+
+    <div class="trending-grid">
+
+      <!-- MOVIE 1 -->
+      <div class="trending-card">
+        <div class="trending-badge">TRENDING</div>
+        <h5>The Dark Knight</h5>
+        <div class="rating">★★★★★ 9.2</div>
+        <div class="popularity">🔥 Popularity Score: High</div>
+        <div class="trending-actions">
+          <a class="btn-imdb" target="_blank"
+             href="https://www.imdb.com/find?q=The+Dark+Knight">IMDb</a>
+          <button class="btn-share"><i class="bi bi-share"></i></button>
+        </div>
+      </div>
+
+      <!-- MOVIE 2 -->
+      <div class="trending-card">
+        <div class="trending-badge">TRENDING</div>
+        <h5>Inception</h5>
+        <div class="rating">★★★★★ 9.6</div>
+        <div class="popularity">🔥 Popularity Score: Very High</div>
+        <div class="trending-actions">
+          <a class="btn-imdb" target="_blank"
+             href="https://www.imdb.com/find?q=Inception">IMDb</a>
+          <button class="btn-share"><i class="bi bi-share"></i></button>
+        </div>
+      </div>
+
+      <!-- MOVIE 3 -->
+      <div class="trending-card">
+        <div class="trending-badge">TRENDING</div>
+        <h5>Interstellar</h5>
+        <div class="rating">★★★★★ 9.4</div>
+        <div class="popularity">🔥 Popularity Score: High</div>
+        <div class="trending-actions">
+          <a class="btn-imdb" target="_blank"
+             href="https://www.imdb.com/find?q=Interstellar">IMDb</a>
+          <button class="btn-share"><i class="bi bi-share"></i></button>
+        </div>
+      </div>
+
+      <!-- MOVIE 4 -->
+      <div class="trending-card">
+        <div class="trending-badge">TRENDING</div>
+        <h5>Parasite</h5>
+        <div class="rating">★★★★★ 8.9</div>
+        <div class="popularity">🔥 Popularity Score: Rising</div>
+        <div class="trending-actions">
+          <a class="btn-imdb" target="_blank"
+             href="https://www.imdb.com/find?q=Parasite+2019">IMDb</a>
+          <button class="btn-share"><i class="bi bi-share"></i></button>
+        </div>
+      </div>
+
+      <!-- MOVIE 5 -->
+      <div class="trending-card">
+        <div class="trending-badge">TRENDING</div>
+        <h5>Avengers: Endgame</h5>
+        <div class="rating">★★★★★ 8.5</div>
+        <div class="popularity">🔥 Popularity Score: Massive</div>
+        <div class="trending-actions">
+          <a class="btn-imdb" target="_blank"
+             href="https://www.imdb.com/find?q=Avengers+Endgame">IMDb</a>
+          <button class="btn-share"><i class="bi bi-share"></i></button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+<!-- ================= END TRENDING MOVIES ================= -->
+
+
+<!-- ================= AI INSIGHTS & ANALYTICS ================= -->
+<section class="analytics-section">
+
+  <!-- ===== STYLES ===== -->
+  <style>
+    .analytics-section{
+      padding:60px 20px 110px;
+    }
+
+    .analytics-title{
+      margin-bottom:40px;
+    }
+
+    .analytics-title h3{
+      font-size:1.8rem;
+      font-weight:800;
+      color:#fff;
+    }
+
+    .analytics-title span{
+      font-size:.9rem;
+      color:#9fdcff;
+    }
+
+    /* GRID */
+    .analytics-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:28px;
+    }
+
+    /* SQUARE CARD */
+    .analytics-card{
+      aspect-ratio:1/1;
+      background:rgba(255,255,255,.08);
+      border-radius:22px;
+      backdrop-filter:blur(14px);
+      border:1px solid rgba(255,255,255,.18);
+      padding:22px;
+      position:relative;
+      transition:.45s;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .analytics-card:hover{
+      transform:translateY(-12px) scale(1.05);
+      box-shadow:0 0 45px rgba(0,245,212,.45);
+      border-color:rgba(0,245,212,.6);
+    }
+
+    /* CARD TITLE */
+    .analytics-card h6{
+      font-size:.85rem;
+      color:#cfe3ff;
+      margin-top:12px;
+      text-align:center;
+      font-weight:600;
+    }
+
+    /* CANVAS */
+    .analytics-card canvas{
+      max-width:140px!important;
+      max-height:140px!important;
+    }
+
+    /* PERCENT TEXT */
+    .center-value{
+      position:absolute;
+      font-size:1.8rem;
+      font-weight:800;
+      color:#00f5d4;
+    }
+  </style>
+
+  <!-- ===== CONTENT ===== -->
+  <div class="container">
+
+    <div class="analytics-title">
+      <h3>📊 AI Insights & Analytics</h3>
+      <span>Real-time intelligence from CineMind AI engine</span>
+    </div>
+
+    <div class="analytics-grid">
+
+      <!-- CARD 1: GENRE PREFERENCE -->
+      <div class="analytics-card">
+        <canvas id="genreChart"></canvas>
+        <h6>Genre Preference</h6>
+      </div>
+
+      <!-- CARD 2: USER ENGAGEMENT -->
+      <div class="analytics-card">
+        <canvas id="engagementChart"></canvas>
+        <h6>User Engagement Trend</h6>
+      </div>
+
+      <!-- CARD 3: AI ACCURACY -->
+      <div class="analytics-card">
+        <canvas id="accuracyChart"></canvas>
+        <div class="center-value">92%</div>
+        <h6>Recommendation Accuracy</h6>
+      </div>
+
+      <!-- CARD 4: USER SATISFACTION -->
+      <div class="analytics-card">
+        <canvas id="satisfactionChart"></canvas>
+        <div class="center-value">95%</div>
+        <h6>User Satisfaction</h6>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    // Smooth reveal animation
+    const cards = document.querySelectorAll(".analytics-card");
+    const observer = new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          e.target.style.opacity = 1;
+          e.target.style.transform = "translateY(0)";
+        }
+      });
+    },{threshold:.2});
+
+    cards.forEach(c=>{
+      c.style.opacity = 0;
+      c.style.transform = "translateY(40px)";
+      observer.observe(c);
+    });
+
+    // GENRE BAR CHART
+    new Chart(document.getElementById("genreChart"),{
+      type:"bar",
+      data:{
+        labels:["Action","Drama","Romance","Thriller","Sci-Fi"],
+        datasets:[{
+          data:[28,35,18,24,20],
+          backgroundColor:"#ff3d5a"
+        }]
+      },
+      options:{
+        plugins:{legend:{display:false}},
+        animation:{duration:2000,easing:"easeOutQuart"},
+        scales:{
+          x:{ticks:{color:"#cfe3ff"}},
+          y:{ticks:{color:"#cfe3ff"},beginAtZero:true}
+        }
+      }
+    });
+
+    // ENGAGEMENT LINE CHART
+    new Chart(document.getElementById("engagementChart"),{
+      type:"line",
+      data:{
+        labels:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+        datasets:[{
+          data:[30,45,40,60,70,85,95],
+          borderColor:"#00f5d4",
+          tension:.4,
+          fill:false
+        }]
+      },
+      options:{
+        plugins:{legend:{display:false}},
+        animation:{duration:2200},
+        scales:{
+          x:{ticks:{color:"#cfe3ff"}},
+          y:{ticks:{color:"#cfe3ff"}}
+        }
+      }
+    });
+
+    // DOUGHNUT ACCURACY
+    new Chart(document.getElementById("accuracyChart"),{
+      type:"doughnut",
+      data:{
+        datasets:[{
+          data:[92,8],
+          backgroundColor:["#00f5d4","rgba(255,255,255,.15)"],
+          borderWidth:0
+        }]
+      },
+      options:{
+        cutout:"78%",
+        plugins:{legend:{display:false}},
+        animation:{animateRotate:true,duration:2500}
+      }
+    });
+
+    // DOUGHNUT SATISFACTION
+    new Chart(document.getElementById("satisfactionChart"),{
+      type:"doughnut",
+      data:{
+        datasets:[{
+          data:[95,5],
+          backgroundColor:["#ffb703","rgba(255,255,255,.15)"],
+          borderWidth:0
+        }]
+      },
+      options:{
+        cutout:"78%",
+        plugins:{legend:{display:false}},
+        animation:{animateRotate:true,duration:2500}
+      }
+    });
+  </script>
+
+</section>
+<!-- ================= END AI INSIGHTS & ANALYTICS ================= -->
+
+
+<!-- ================= USER MOOD SELECTOR + RECOMMENDATIONS ================= -->
+<section class="mood-section">
+
+  <style>
+    .mood-section{
+      padding:60px 20px 120px;
+    }
+
+    .mood-title h3{
+      font-size:1.8rem;
+      font-weight:800;
+      color:#fff;
+    }
+
+    .mood-title span{
+      color:#9fdcff;
+      font-size:.9rem;
+    }
+
+    /* MOOD BUTTONS */
+    .mood-buttons{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+      margin:30px 0 40px;
+    }
+
+    .mood-btn{
+      padding:14px 22px;
+      border-radius:40px;
+      border:1px solid rgba(255,255,255,.3);
+      background:rgba(255,255,255,.08);
+      color:#fff;
+      font-weight:700;
+      cursor:pointer;
+      transition:.35s;
+    }
+
+    .mood-btn:hover,
+    .mood-btn.active{
+      background:linear-gradient(135deg,#ff3d5a,#ff006e);
+      box-shadow:0 0 30px rgba(255,61,90,.8);
+      transform:scale(1.08);
+    }
+
+    /* MOVIE GRID */
+    .mood-movie-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:26px;
+    }
+
+    .mood-movie-card{
+      background:rgba(255,255,255,.08);
+      border-radius:22px;
+      padding:22px;
+      backdrop-filter:blur(14px);
+      border:1px solid rgba(255,255,255,.18);
+      transition:.4s;
+    }
+
+    .mood-movie-card:hover{
+      transform:translateY(-12px) scale(1.04);
+      box-shadow:0 0 40px rgba(0,245,212,.4);
+      border-color:#00f5d4;
+    }
+
+    .mood-movie-card h5{
+      color:#fff;
+      font-weight:700;
+      margin-bottom:10px;
+    }
+
+    .mood-movie-card p{
+      font-size:.85rem;
+      color:#cfe3ff;
+      margin-bottom:14px;
+    }
+
+    .imdb-btn{
+      display:inline-block;
+      padding:8px 18px;
+      border-radius:20px;
+      font-size:.75rem;
+      font-weight:700;
+      background:#f5c518;
+      color:#000;
+      text-decoration:none;
+      transition:.3s;
+    }
+
+    .imdb-btn:hover{
+      transform:scale(1.08);
+      box-shadow:0 0 20px rgba(245,197,24,.8);
+    }
+  </style>
+
+  <div class="container">
+
+    <div class="mood-title">
+      <h3>😊 Choose Your Mood</h3>
+      <span>Instant AI-style recommendations (live demo)</span>
+    </div>
+
+    <!-- MOOD BUTTONS -->
+    <div class="mood-buttons">
+      <button class="mood-btn active" data-mood="happy">😊 Happy</button>
+      <button class="mood-btn" data-mood="romantic">❤️ Romantic</button>
+      <button class="mood-btn" data-mood="thriller">😱 Thriller</button>
+      <button class="mood-btn" data-mood="action">🔥 Action</button>
+      <button class="mood-btn" data-mood="chill">🌙 Chill</button>
+    </div>
+
+    <!-- MOVIE RESULTS -->
+    <div class="mood-movie-grid" id="moodResults"></div>
+
+  </div>
+
+  <script>
+    const moodData = {
+      happy: [
+        "Forrest Gump",
+        "The Intern",
+        "Paddington",
+        "The Secret Life of Walter Mitty",
+        "Little Miss Sunshine"
+      ],
+      romantic: [
+        "Titanic",
+        "The Notebook",
+        "La La Land",
+        "Pride & Prejudice",
+        "Before Sunrise"
+      ],
+      thriller: [
+        "Se7en",
+        "Gone Girl",
+        "Prisoners",
+        "Shutter Island",
+        "The Silence of the Lambs"
+      ],
+      action: [
+        "The Dark Knight",
+        "Mad Max Fury Road",
+        "John Wick",
+        "Gladiator",
+        "Inception"
+      ],
+      chill: [
+        "Her",
+        "Lost in Translation",
+        "Call Me by Your Name",
+        "The Grand Budapest Hotel",
+        "Midnight in Paris"
+      ]
+    };
+
+    const resultsDiv = document.getElementById("moodResults");
+    const moodButtons = document.querySelectorAll(".mood-btn");
+
+    function renderMovies(mood){
+      resultsDiv.innerHTML = "";
+      moodData[mood].forEach(title=>{
+        resultsDiv.innerHTML += `
+          <div class="mood-movie-card">
+            <h5>${title}</h5>
+            <p>AI-curated recommendation based on your mood.</p>
+            <a class="imdb-btn" target="_blank"
+               href="https://www.imdb.com/find?q=${encodeURIComponent(title)}">
+               IMDb
+            </a>
+          </div>
+        `;
+      });
+    }
+
+    // Init default mood
+    renderMovies("happy");
+
+    moodButtons.forEach(btn=>{
+      btn.addEventListener("click",()=>{
+        moodButtons.forEach(b=>b.classList.remove("active"));
+        btn.classList.add("active");
+        renderMovies(btn.dataset.mood);
+      });
+    });
+  </script>
+
+</section>
+<!-- ================= END MOOD RECOMMENDATIONS ================= -->
+
+{% endblock %}

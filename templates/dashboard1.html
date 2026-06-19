@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+{% block title %}Dashboard – CineMind AI{% endblock %}
+
+{% block content %}
+
+<!-- ================= DASHBOARD ================= -->
+<section class="dashboard-section">
+
+  <!-- ===== STYLES ===== -->
+  <style>
+    .dashboard-section{
+      padding:100px 20px;
+      background:
+        radial-gradient(circle at top, rgba(255,61,90,.12), transparent 60%),
+        radial-gradient(circle at bottom, rgba(0,245,212,.12), transparent 60%);
+    }
+
+    .dash-title{
+      text-align:center;
+      margin-bottom:60px;
+    }
+
+    .dash-title h2{
+      font-size:clamp(2.2rem,4vw,3rem);
+      font-weight:800;
+      background:linear-gradient(90deg,#ff3d5a,#ffb703,#00f5d4);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-bottom:14px;
+    }
+
+    .dash-title p{
+      max-width:760px;
+      margin:auto;
+      color:#cfe3ff;
+      font-size:1.05rem;
+      line-height:1.7;
+    }
+
+    /* SEARCH CARD */
+    .search-card{
+      max-width:800px;
+      margin:40px auto 60px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.18);
+      backdrop-filter:blur(14px);
+      border-radius:26px;
+      padding:34px;
+      box-shadow:0 0 35px rgba(255,61,90,.3);
+    }
+
+    .search-card input{
+      background:rgba(0,0,0,.4);
+      border:none;
+      color:#fff;
+      padding:16px;
+      border-radius:14px;
+    }
+
+    .search-card input:focus{
+      outline:none;
+      box-shadow:0 0 0 2px rgba(0,245,212,.4);
+    }
+
+    .search-btn{
+      padding:14px 34px;
+      border-radius:50px;
+      border:none;
+      font-weight:600;
+      background:linear-gradient(135deg,#ff3d5a,#ff006e);
+      color:#fff;
+      box-shadow:0 0 30px rgba(255,61,90,.7);
+      transition:.3s;
+    }
+
+    .search-btn:hover{
+      transform:scale(1.06);
+      box-shadow:0 0 45px rgba(255,61,90,.95);
+    }
+
+    /* LOADER */
+    .loader{
+      display:none;
+      margin:50px auto;
+      width:70px;
+      height:70px;
+      border-radius:50%;
+      border:6px solid rgba(255,255,255,.2);
+      border-top:6px solid #00f5d4;
+      animation:spin 1s linear infinite;
+    }
+
+    @keyframes spin{
+      to{transform:rotate(360deg)}
+    }
+
+    /* MOVIE GRID */
+    .movie-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+      gap:28px;
+    }
+
+    .movie-card{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.18);
+      backdrop-filter:blur(14px);
+      border-radius:24px;
+      padding:26px;
+      transition:.45s;
+      height:100%;
+    }
+
+    .movie-card:hover{
+      transform:translateY(-14px) scale(1.03);
+      box-shadow:0 0 40px rgba(0,245,212,.35);
+      border-color:rgba(0,245,212,.6);
+    }
+
+    .movie-card h5{
+      color:#fff;
+      font-weight:700;
+      margin-bottom:8px;
+    }
+
+    .movie-meta{
+      font-size:.9rem;
+      color:#9fdcff;
+      margin-bottom:10px;
+    }
+
+    .movie-overview{
+      font-size:.95rem;
+      color:#dbe7ff;
+      line-height:1.6;
+      max-height:120px;
+      overflow:hidden;
+    }
+
+    .badge-ai{
+      background:linear-gradient(135deg,#00f5d4,#38bdf8);
+      color:#000;
+      font-size:.75rem;
+      font-weight:700;
+      padding:4px 10px;
+      border-radius:12px;
+      display:inline-block;
+      margin-bottom:10px;
+    }
+  </style>
+
+  <!-- ===== CONTENT ===== -->
+  <div class="container">
+
+    <div class="dash-title">
+      <h2>AI Movie Recommendation Dashboard</h2>
+      <p>
+        Select a movie you love and let our AI discover similar films
+        tailored to your taste.
+      </p>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="search-card">
+      <form id="recommendForm" class="row g-3">
+        <div class="col-md-9">
+          <input
+            list="movieList"
+            name="movie"
+            id="movieInput"
+            class="form-control"
+            placeholder="Start typing a movie name..."
+            required
+          >
+          <datalist id="movieList">
+            {% for movie in movies %}
+              <option value="{{ movie }}"></option>
+            {% endfor %}
+          </datalist>
+        </div>
+        <div class="col-md-3 d-grid">
+          <button class="search-btn" type="submit">
+            Get Recommendations
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- LOADER -->
+    <div class="loader" id="loader"></div>
+
+    <!-- RESULTS -->
+    <div id="results" class="movie-grid"></div>
+
+  </div>
+
+  <!-- ===== SCRIPT ===== -->
+  <script>
+    const form = document.getElementById("recommendForm");
+    const loader = document.getElementById("loader");
+    const results = document.getElementById("results");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      results.innerHTML = "";
+      loader.style.display = "block";
+
+      const movie = document.getElementById("movieInput").value;
+
+      const response = await fetch("/recommend", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "movie=" + encodeURIComponent(movie)
+      });
+
+      loader.style.display = "none";
+
+      const data = await response.json();
+
+      if(data.error){
+        results.innerHTML = `<p class="text-center text-danger">${data.error}</p>`;
+        return;
+      }
+
+      data.forEach(m => {
+        results.innerHTML += `
+          <div class="movie-card">
+            <span class="badge-ai">AI MATCH</span>
+            <h5>${m.title}</h5>
+            <div class="movie-meta">
+              ⭐ ${m.vote_average} &nbsp; | &nbsp;
+              🔥 ${Math.round(m.popularity)} &nbsp; | &nbsp;
+              📅 ${m.release_date}
+            </div>
+            <p class="movie-overview">${m.overview}</p>
+          </div>
+        `;
+      });
+    });
+  </script>
+
+</section>
+<!-- ================= END DASHBOARD ================= -->
+
+{% endblock %}

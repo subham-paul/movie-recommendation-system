@@ -1,0 +1,1372 @@
+{% extends "base.html" %}
+{% block title %}About – CineMind AI{% endblock %}
+
+{% block content %}
+
+<!-- ================= ABOUT HERO SECTION ================= -->
+<section class="about-hero">
+
+  <!-- ===== STYLES ===== -->
+  <style>
+    .about-hero{
+      position:relative;
+      height:90vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+    }
+
+    /* BACKGROUND IMAGE */
+    .about-hero-bg{
+      position:absolute;
+      inset:0;
+      background-image:url('https://images.unsplash.com/photo-1524985069026-dd778a71c7b4');
+      background-size:cover;
+      background-position:center;
+      transform:scale(1.1);
+      animation:heroZoom 18s ease-in-out infinite alternate;
+      z-index:1;
+    }
+
+    @keyframes heroZoom{
+      from{transform:scale(1.1)}
+      to{transform:scale(1.2)}
+    }
+
+    /* DARK OVERLAY */
+    .about-hero-overlay{
+      position:absolute;
+      inset:0;
+      background:linear-gradient(
+        120deg,
+        rgba(5,6,20,.88),
+        rgba(15,10,40,.82),
+        rgba(5,6,20,.92)
+      );
+      z-index:2;
+    }
+
+    /* CONTENT */
+    .about-hero-content{
+      position:relative;
+      z-index:3;
+      text-align:center;
+      padding:0 20px;
+      max-width:900px;
+      animation:fadeUp 1.4s ease forwards;
+      opacity:0;
+    }
+
+    @keyframes fadeUp{
+      from{
+        opacity:0;
+        transform:translateY(30px);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    .about-hero-content h1{
+      font-size:clamp(2.4rem,5vw,3.6rem);
+      font-weight:800;
+      background:linear-gradient(90deg,#ff3d5a,#ffb703,#00f5d4);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-bottom:22px;
+    }
+
+    .about-hero-content p{
+      font-size:1.15rem;
+      line-height:1.8;
+      color:#dbe7ff;
+      max-width:760px;
+      margin:auto;
+    }
+
+    /* RESPONSIVE */
+    @media(max-width:768px){
+      .about-hero{
+        height:auto;
+        padding:140px 0 120px;
+      }
+    }
+  </style>
+
+  <!-- ===== BACKGROUND ===== -->
+  <div class="about-hero-bg"></div>
+  <div class="about-hero-overlay"></div>
+
+  <!-- ===== CONTENT ===== -->
+  <div class="about-hero-content">
+    <h1>About Our AI Movie Recommendation System</h1>
+    <p>
+      Smarter movie discovery powered by Machine Learning —
+      helping you find the perfect movie without endless scrolling.
+    </p>
+  </div>
+
+</section>
+<!-- ================= END ABOUT HERO ================= -->
+
+<!-- ================= OUR STORY ================= -->
+<section class="about-story">
+
+  <!-- ===== STYLES ===== -->
+  <style>
+    .about-story{
+      padding:110px 20px;
+    }
+
+    .story-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:60px;
+      align-items:center;
+    }
+
+    /* TEXT CONTENT */
+    .story-text h2{
+      font-size:2.2rem;
+      font-weight:800;
+      color:#fff;
+      margin-bottom:22px;
+    }
+
+    .story-text p{
+      font-size:1.05rem;
+      line-height:1.9;
+      color:#dbe7ff;
+      margin-bottom:18px;
+    }
+
+    .story-highlight{
+      color:#00f5d4;
+      font-weight:600;
+    }
+
+    /* IMAGE */
+    .story-image{
+      position:relative;
+      border-radius:26px;
+      overflow:hidden;
+      box-shadow:0 0 50px rgba(255,61,90,.35);
+    }
+
+    .story-image img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      transition:transform 6s ease;
+    }
+
+    .story-image:hover img{
+      transform:scale(1.08);
+    }
+
+    .story-image::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(
+        120deg,
+        rgba(5,6,20,.55),
+        rgba(5,6,20,.85)
+      );
+    }
+
+    /* FADE-IN ANIMATION */
+    .fade-in{
+      opacity:0;
+      transform:translateY(40px);
+      transition:all 1.2s ease;
+    }
+
+    .fade-in.visible{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    /* RESPONSIVE */
+    @media(max-width:991px){
+      .story-grid{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+
+  <!-- ===== CONTENT ===== -->
+  <div class="container">
+    <div class="story-grid">
+
+      <!-- LEFT: TEXT -->
+      <div class="story-text fade-in">
+        <h2>Why We Built This Platform</h2>
+
+        <p>
+          With thousands of movies available across streaming platforms,
+          finding <span class="story-highlight">the right movie</span> has become
+          harder than ever. Users spend more time scrolling than watching,
+          often experiencing decision fatigue instead of entertainment.
+        </p>
+
+        <p>
+          We created this AI-powered movie recommendation system to solve that problem.
+          Instead of generic suggestions, our platform analyzes movie content,
+          user preferences, and contextual signals to deliver
+          <span class="story-highlight">personalized recommendations</span>
+          that actually match your taste.
+        </p>
+
+        <p>
+          By combining machine learning, natural language processing,
+          and intelligent ranking algorithms, we help users discover movies
+          they would genuinely enjoy — faster, smarter, and without frustration.
+        </p>
+      </div>
+
+      <!-- RIGHT: IMAGE -->
+      <div class="story-image fade-in">
+        <img
+          src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c"
+          alt="AI Movie Discovery Illustration"
+        >
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== SCRIPT ===== -->
+  <script>
+    const storyElements = document.querySelectorAll(".fade-in");
+
+    const storyObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add("visible");
+        }
+      });
+    }, { threshold: 0.25 });
+
+    storyElements.forEach(el => storyObserver.observe(el));
+  </script>
+
+</section>
+<!-- ================= END OUR STORY ================= -->
+
+<!-- ================= MISSION & VISION ================= -->
+<section class="mission-vision-section">
+
+  <!-- ===== STYLES ===== -->
+  <style>
+    .mission-vision-section{
+      padding:100px 20px;
+    }
+
+    .mv-title{
+      text-align:center;
+      margin-bottom:70px;
+    }
+
+    .mv-title h2{
+      font-size:2.3rem;
+      font-weight:800;
+      background:linear-gradient(90deg,#ff3d5a,#ffb703,#00f5d4);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-bottom:14px;
+    }
+
+    .mv-title p{
+      max-width:740px;
+      margin:auto;
+      color:#cfe3ff;
+      font-size:1.05rem;
+      line-height:1.7;
+    }
+
+    /* GRID */
+    .mv-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+      gap:40px;
+      max-width:1100px;
+      margin:auto;
+    }
+
+    /* CARD */
+    .mv-card{
+      background:rgba(255,255,255,.08);
+      backdrop-filter:blur(14px);
+      border-radius:26px;
+      padding:48px 36px;
+      border:1px solid rgba(255,255,255,.18);
+      position:relative;
+      transition:.45s;
+      overflow:hidden;
+      text-align:center;
+    }
+
+    /* NEON BORDER */
+    .mv-card::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:26px;
+      padding:2px;
+      background:linear-gradient(
+        120deg,
+        #ff3d5a,
+        #ffb703,
+        #00f5d4
+      );
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor;
+      mask-composite:exclude;
+      opacity:.55;
+    }
+
+    .mv-card:hover{
+      transform:translateY(-16px) scale(1.04);
+      box-shadow:0 0 50px rgba(0,245,212,.5);
+      border-color:rgba(0,245,212,.7);
+    }
+
+    /* ICON */
+    .mv-icon{
+      width:80px;
+      height:80px;
+      border-radius:20px;
+      margin:0 auto 28px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:2.2rem;
+      background:linear-gradient(135deg,#ff3d5a,#ffb703);
+      color:#000;
+      box-shadow:0 0 30px rgba(255,61,90,.8);
+      animation:floatIcon 3.2s infinite ease-in-out;
+    }
+
+    @keyframes floatIcon{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-8px)}
+    }
+
+    .mv-card h3{
+      font-size:1.5rem;
+      font-weight:800;
+      color:#fff;
+      margin-bottom:16px;
+    }
+
+    .mv-card p{
+      font-size:1.02rem;
+      color:#dbe7ff;
+      line-height:1.8;
+    }
+  </style>
+
+  <!-- ===== CONTENT ===== -->
+  <div class="container">
+
+    <div class="mv-title">
+      <h2>Our Mission & Vision</h2>
+      <p>
+        Driven by innovation, guided by intelligence, and focused on delivering
+        meaningful entertainment experiences through AI.
+      </p>
+    </div>
+
+    <div class="mv-grid">
+
+      <!-- MISSION -->
+      <div class="mv-card">
+        <div class="mv-icon">
+          <i class="bi bi-bullseye"></i>
+        </div>
+        <h3>Our Mission</h3>
+        <p>
+          To deliver deeply personalized movie recommendations by leveraging
+          artificial intelligence and machine learning — helping users discover
+          films they genuinely love without endless searching.
+        </p>
+      </div>
+
+      <!-- VISION -->
+      <div class="mv-card">
+        <div class="mv-icon">
+          <i class="bi bi-eye-fill"></i>
+        </div>
+        <h3>Our Vision</h3>
+        <p>
+          To become the most intelligent and trusted entertainment discovery platform,
+          where AI understands user taste, mood, and context to redefine how
+          people explore movies and stories.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+<!-- ================= END MISSION & VISION ================= -->
+
+
+<!-- ================= AI TECHNOLOGY STACK ================= -->
+<section class="ai-stack-section">
+
+  <!-- ===== STYLES ===== -->
+  <style>
+    .ai-stack-section{
+      padding:110px 20px;
+    }
+
+    .stack-title{
+      text-align:center;
+      margin-bottom:70px;
+    }
+
+    .stack-title h2{
+      font-size:2.3rem;
+      font-weight:800;
+      background:linear-gradient(90deg,#ff3d5a,#ffb703,#00f5d4);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-bottom:14px;
+    }
+
+    .stack-title p{
+      max-width:760px;
+      margin:auto;
+      color:#cfe3ff;
+      font-size:1.05rem;
+      line-height:1.7;
+    }
+
+    /* GRID */
+    .stack-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:34px;
+      max-width:1200px;
+      margin:auto;
+    }
+
+    /* CARD */
+    .stack-card{
+      background:rgba(255,255,255,.08);
+      backdrop-filter:blur(14px);
+      border-radius:24px;
+      padding:40px 30px;
+      border:1px solid rgba(255,255,255,.18);
+      position:relative;
+      transition:.45s;
+      overflow:hidden;
+      opacity:0;
+      transform:translateY(40px);
+    }
+
+    .stack-card.visible{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    /* NEON BORDER */
+    .stack-card::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:24px;
+      padding:1.5px;
+      background:linear-gradient(
+        120deg,
+        #ff3d5a,
+        #ffb703,
+        #00f5d4
+      );
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor;
+      mask-composite:exclude;
+      opacity:.45;
+    }
+
+    .stack-card:hover{
+      transform:translateY(-14px) scale(1.04);
+      box-shadow:0 0 45px rgba(0,245,212,.45);
+      border-color:rgba(0,245,212,.7);
+    }
+
+    /* ICON */
+    .stack-icon{
+      width:72px;
+      height:72px;
+      border-radius:18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:2rem;
+      margin-bottom:22px;
+      background:linear-gradient(135deg,#ff3d5a,#ffb703);
+      color:#000;
+      box-shadow:0 0 28px rgba(255,61,90,.8);
+    }
+
+    .stack-card h4{
+      font-size:1.3rem;
+      font-weight:800;
+      color:#fff;
+      margin-bottom:12px;
+    }
+
+    .stack-card p{
+      font-size:.98rem;
+      color:#dbe7ff;
+      line-height:1.8;
+    }
+  </style>
+
+  <!-- ===== CONTENT ===== -->
+  <div class="container">
+
+    <div class="stack-title">
+      <h2>AI Technology Stack</h2>
+      <p>
+        Our recommendation engine is powered by proven machine learning techniques
+        designed to understand movie content, user preferences, and viewing behavior.
+      </p>
+    </div>
+
+    <div class="stack-grid">
+
+      <!-- CONTENT-BASED FILTERING -->
+      <div class="stack-card">
+        <div class="stack-icon">
+          <i class="bi bi-filter-circle"></i>
+        </div>
+        <h4>Content-Based Filtering</h4>
+        <p>
+          Analyzes movie descriptions, genres, and metadata to recommend films
+          similar to what the user already enjoys.
+        </p>
+      </div>
+
+      <!-- COLLABORATIVE FILTERING -->
+      <div class="stack-card">
+        <div class="stack-icon">
+          <i class="bi bi-people-fill"></i>
+        </div>
+        <h4>Collaborative Filtering</h4>
+        <p>
+          Identifies patterns across users with similar tastes to suggest
+          movies based on collective viewing behavior.
+        </p>
+      </div>
+
+      <!-- NLP -->
+      <div class="stack-card">
+        <div class="stack-icon">
+          <i class="bi bi-chat-text-fill"></i>
+        </div>
+        <h4>Natural Language Processing</h4>
+        <p>
+          Uses TF-IDF and semantic similarity to understand movie overviews,
+          themes, and contextual meaning.
+        </p>
+      </div>
+
+      <!-- USER BEHAVIOR -->
+      <div class="stack-card">
+        <div class="stack-icon">
+          <i class="bi bi-activity"></i>
+        </div>
+        <h4>User Behavior Analysis</h4>
+        <p>
+          Tracks interactions such as likes, searches, and moods to refine
+          personalization over time.
+        </p>
+      </div>
+
+      <!-- DEEP LEARNING -->
+      <div class="stack-card">
+        <div class="stack-icon">
+          <i class="bi bi-cpu-fill"></i>
+        </div>
+        <h4>Deep Learning Models</h4>
+        <p>
+          Enables scalable and adaptive recommendation logic for future
+          expansion into advanced neural networks.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== SCRIPT ===== -->
+  <script>
+    const stackCards = document.querySelectorAll(".stack-card");
+
+    const stackObserver = new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          entry.target.classList.add("visible");
+        }
+      });
+    },{threshold:.25});
+
+    stackCards.forEach(card=>stackObserver.observe(card));
+  </script>
+
+</section>
+<!-- ================= END AI TECHNOLOGY STACK ================= -->
+
+
+<!-- ================= WHY WE ARE DIFFERENT ================= -->
+<section class="why-different-section">
+
+  <!-- ===== STYLES ===== -->
+  <style>
+    .why-different-section{
+      padding:110px 20px;
+    }
+
+    .wd-title{
+      text-align:center;
+      margin-bottom:70px;
+    }
+
+    .wd-title h2{
+      font-size:2.3rem;
+      font-weight:800;
+      background:linear-gradient(90deg,#ff3d5a,#ffb703,#00f5d4);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-bottom:14px;
+    }
+
+    .wd-title p{
+      max-width:760px;
+      margin:auto;
+      color:#cfe3ff;
+      font-size:1.05rem;
+      line-height:1.7;
+    }
+
+    /* GRID */
+    .wd-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:34px;
+      max-width:1200px;
+      margin:auto;
+    }
+
+    /* CARD */
+    .wd-card{
+      background:rgba(255,255,255,.08);
+      backdrop-filter:blur(14px);
+      border-radius:24px;
+      padding:42px 30px;
+      border:1px solid rgba(255,255,255,.18);
+      position:relative;
+      transition:.45s;
+      overflow:hidden;
+      text-align:center;
+    }
+
+    /* NEON BORDER */
+    .wd-card::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:24px;
+      padding:1.5px;
+      background:linear-gradient(
+        120deg,
+        #ff3d5a,
+        #ffb703,
+        #00f5d4
+      );
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor;
+      mask-composite:exclude;
+      opacity:.4;
+    }
+
+    .wd-card:hover{
+      transform:translateY(-16px) scale(1.05);
+      box-shadow:0 0 45px rgba(0,245,212,.45);
+      border-color:rgba(0,245,212,.7);
+    }
+
+    /* ICON */
+    .wd-icon{
+      width:78px;
+      height:78px;
+      border-radius:20px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:2.1rem;
+      margin:0 auto 24px;
+      background:linear-gradient(135deg,#ff3d5a,#ffb703);
+      color:#000;
+      box-shadow:0 0 30px rgba(255,61,90,.8);
+    }
+
+    .wd-card h4{
+      font-size:1.3rem;
+      font-weight:800;
+      color:#fff;
+      margin-bottom:12px;
+    }
+
+    .wd-card p{
+      font-size:.98rem;
+      color:#dbe7ff;
+      line-height:1.8;
+    }
+  </style>
+
+  <!-- ===== CONTENT ===== -->
+  <div class="container">
+
+    <div class="wd-title">
+      <h2>Why We Are Different</h2>
+      <p>
+        Unlike traditional recommendation systems, our platform focuses on
+        intelligence, personalization, and user trust — not just popularity.
+      </p>
+    </div>
+
+    <div class="wd-grid">
+
+      <!-- REAL-TIME PERSONALIZATION -->
+      <div class="wd-card">
+        <div class="wd-icon">
+          <i class="bi bi-lightning-charge-fill"></i>
+        </div>
+        <h4>Real-Time Personalization</h4>
+        <p>
+          Recommendations adapt instantly based on user interactions,
+          ensuring content stays relevant with every click and search.
+        </p>
+      </div>
+
+      <!-- MOOD-BASED AI -->
+      <div class="wd-card">
+        <div class="wd-icon">
+          <i class="bi bi-emoji-smile-fill"></i>
+        </div>
+        <h4>Mood-Based Recommendations</h4>
+        <p>
+          Our AI understands emotional intent, allowing users to discover
+          movies that match their mood — not just their history.
+        </p>
+      </div>
+
+      <!-- PRIVACY FIRST -->
+      <div class="wd-card">
+        <div class="wd-icon">
+          <i class="bi bi-shield-lock-fill"></i>
+        </div>
+        <h4>Privacy-First AI</h4>
+        <p>
+          We prioritize user privacy by minimizing data usage and ensuring
+          transparent, ethical AI-driven recommendations.
+        </p>
+      </div>
+
+      <!-- CROSS-PLATFORM -->
+      <div class="wd-card">
+        <div class="wd-icon">
+          <i class="bi bi-layers-fill"></i>
+        </div>
+        <h4>Cross-Platform Compatibility</h4>
+        <p>
+          Designed to work seamlessly across devices and platforms,
+          delivering a consistent experience everywhere.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+<!-- ================= END WHY WE ARE DIFFERENT ================= -->
+
+
+<!-- ================= TEAM SECTION ================= -->
+<section class="team-section">
+
+  <!-- ===== STYLES ===== -->
+  <style>
+    .team-section{
+      padding:110px 20px;
+    }
+
+    .team-title{
+      text-align:center;
+      margin-bottom:70px;
+    }
+
+    .team-title h2{
+      font-size:2.3rem;
+      font-weight:800;
+      background:linear-gradient(90deg,#ff3d5a,#ffb703,#00f5d4);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-bottom:14px;
+    }
+
+    .team-title p{
+      max-width:760px;
+      margin:auto;
+      color:#cfe3ff;
+      font-size:1.05rem;
+      line-height:1.7;
+    }
+
+    /* GRID */
+    .team-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:34px;
+      max-width:1200px;
+      margin:auto;
+    }
+
+    /* CARD */
+    .team-card{
+      background:rgba(255,255,255,.08);
+      backdrop-filter:blur(14px);
+      border-radius:26px;
+      padding:42px 30px;
+      border:1px solid rgba(255,255,255,.18);
+      text-align:center;
+      position:relative;
+      transition:.45s;
+      overflow:hidden;
+    }
+
+    .team-card::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:26px;
+      padding:1.5px;
+      background:linear-gradient(
+        120deg,
+        #ff3d5a,
+        #ffb703,
+        #00f5d4
+      );
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor;
+      mask-composite:exclude;
+      opacity:.35;
+    }
+
+    .team-card:hover{
+      transform:translateY(-16px) scale(1.05);
+      box-shadow:0 0 45px rgba(0,245,212,.45);
+      border-color:rgba(0,245,212,.7);
+    }
+
+    /* PROFILE IMAGE */
+    .team-img{
+      width:120px;
+      height:120px;
+      border-radius:50%;
+      margin:0 auto 22px;
+      overflow:hidden;
+      border:3px solid rgba(255,255,255,.25);
+      box-shadow:0 0 25px rgba(255,61,90,.6);
+    }
+
+    .team-img img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .team-card h4{
+      font-size:1.3rem;
+      font-weight:800;
+      color:#fff;
+      margin-bottom:6px;
+    }
+
+    .team-role{
+      font-size:.9rem;
+      color:#00f5d4;
+      font-weight:600;
+      margin-bottom:14px;
+    }
+
+    .team-card p{
+      font-size:.95rem;
+      color:#dbe7ff;
+      line-height:1.7;
+      margin-bottom:20px;
+    }
+
+    /* SOCIAL ICONS */
+    .team-social{
+      display:flex;
+      justify-content:center;
+      gap:16px;
+    }
+
+    .team-social a{
+      width:38px;
+      height:38px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(255,255,255,.12);
+      color:#fff;
+      font-size:1.1rem;
+      transition:.35s;
+      text-decoration:none;
+    }
+
+    .team-social a:hover{
+      background:linear-gradient(135deg,#ff3d5a,#ffb703);
+      color:#000;
+      transform:scale(1.15);
+      box-shadow:0 0 20px rgba(255,61,90,.8);
+    }
+  </style>
+
+  <!-- ===== CONTENT ===== -->
+  <div class="container">
+
+    <div class="team-title">
+      <h2>Meet the Team</h2>
+      <p>
+        A passionate group of engineers and designers working together to
+        build intelligent, user-focused movie discovery experiences.
+      </p>
+    </div>
+
+    <div class="team-grid">
+
+      <!-- MEMBER 1 -->
+      <div class="team-card">
+        <div class="team-img">
+          <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Team Member">
+        </div>
+        <h4>Sabuj Dhali</h4>
+        <div class="team-role">Founder & AI Engineer</div>
+        <p>
+          Focused on building intelligent recommendation systems using
+          machine learning and data-driven personalization.
+        </p>
+        <div class="team-social">
+          <a href="#"><i class="bi bi-linkedin"></i></a>
+          <a href="#"><i class="bi bi-github"></i></a>
+          <a href="#"><i class="bi bi-twitter-x"></i></a>
+        </div>
+      </div>
+
+      <!-- MEMBER 2 -->
+      <div class="team-card">
+        <div class="team-img">
+          <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Team Member">
+        </div>
+        <h4>Ananya Roy</h4>
+        <div class="team-role">Frontend Developer</div>
+        <p>
+          Designs cinematic, responsive user interfaces with a focus on
+          usability and modern UX principles.
+        </p>
+        <div class="team-social">
+          <a href="#"><i class="bi bi-linkedin"></i></a>
+          <a href="#"><i class="bi bi-github"></i></a>
+          <a href="#"><i class="bi bi-twitter-x"></i></a>
+        </div>
+      </div>
+
+      <!-- MEMBER 3 -->
+      <div class="team-card">
+        <div class="team-img">
+          <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Team Member">
+        </div>
+        <h4>Rohit Sharma</h4>
+        <div class="team-role">Backend Engineer</div>
+        <p>
+          Specializes in Flask, APIs, and scalable backend systems for
+          AI-powered applications.
+        </p>
+        <div class="team-social">
+          <a href="#"><i class="bi bi-linkedin"></i></a>
+          <a href="#"><i class="bi bi-github"></i></a>
+          <a href="#"><i class="bi bi-twitter-x"></i></a>
+        </div>
+      </div>
+
+      <!-- MEMBER 4 -->
+      <div class="team-card">
+        <div class="team-img">
+          <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Team Member">
+        </div>
+        <h4>Priya Sen</h4>
+        <div class="team-role">Data Analyst</div>
+        <p>
+          Analyzes user behavior and movie trends to continuously
+          improve recommendation accuracy.
+        </p>
+        <div class="team-social">
+          <a href="#"><i class="bi bi-linkedin"></i></a>
+          <a href="#"><i class="bi bi-github"></i></a>
+          <a href="#"><i class="bi bi-twitter-x"></i></a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+<!-- ================= END TEAM SECTION ================= -->
+
+
+<!-- ================= TRUST & STATS ================= -->
+<section class="stats-section">
+
+  <!-- ===== STYLES ===== -->
+  <style>
+    .stats-section{
+      padding:110px 20px;
+      background:linear-gradient(
+        180deg,
+        rgba(5,6,20,0),
+        rgba(5,6,20,.6),
+        rgba(5,6,20,0)
+      );
+    }
+
+    .stats-title{
+      text-align:center;
+      margin-bottom:70px;
+    }
+
+    .stats-title h2{
+      font-size:2.3rem;
+      font-weight:800;
+      background:linear-gradient(90deg,#ff3d5a,#ffb703,#00f5d4);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-bottom:14px;
+    }
+
+    .stats-title p{
+      max-width:760px;
+      margin:auto;
+      color:#cfe3ff;
+      font-size:1.05rem;
+      line-height:1.7;
+    }
+
+    /* GRID */
+    .stats-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:34px;
+      max-width:1200px;
+      margin:auto;
+    }
+
+    /* CARD */
+    .stat-card{
+      background:rgba(255,255,255,.08);
+      backdrop-filter:blur(14px);
+      border-radius:26px;
+      padding:50px 28px;
+      border:1px solid rgba(255,255,255,.18);
+      text-align:center;
+      position:relative;
+      transition:.45s;
+      overflow:hidden;
+    }
+
+    .stat-card::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:26px;
+      padding:1.5px;
+      background:linear-gradient(
+        120deg,
+        #ff3d5a,
+        #ffb703,
+        #00f5d4
+      );
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor;
+      mask-composite:exclude;
+      opacity:.35;
+    }
+
+    .stat-card:hover{
+      transform:translateY(-16px) scale(1.05);
+      box-shadow:0 0 45px rgba(0,245,212,.45);
+      border-color:rgba(0,245,212,.7);
+    }
+
+    /* ICON */
+    .stat-icon{
+      width:78px;
+      height:78px;
+      border-radius:20px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:2.2rem;
+      margin:0 auto 22px;
+      background:linear-gradient(135deg,#ff3d5a,#ffb703);
+      color:#000;
+      box-shadow:0 0 28px rgba(255,61,90,.8);
+    }
+
+    .stat-number{
+      font-size:2.4rem;
+      font-weight:900;
+      color:#00f5d4;
+      margin-bottom:8px;
+    }
+
+    .stat-label{
+      font-size:1rem;
+      color:#dbe7ff;
+      font-weight:600;
+    }
+  </style>
+
+  <!-- ===== CONTENT ===== -->
+  <div class="container">
+
+    <div class="stats-title">
+      <h2>Trusted by Users, Powered by AI</h2>
+      <p>
+        Our system delivers consistent, accurate, and meaningful recommendations
+        backed by intelligent algorithms and user trust.
+      </p>
+    </div>
+
+    <div class="stats-grid">
+
+      <!-- USERS -->
+      <div class="stat-card">
+        <div class="stat-icon"><i class="bi bi-people-fill"></i></div>
+        <div class="stat-number" data-target="50000">0</div>
+        <div class="stat-label">Users Served</div>
+      </div>
+
+      <!-- MOVIES -->
+      <div class="stat-card">
+        <div class="stat-icon"><i class="bi bi-film"></i></div>
+        <div class="stat-number" data-target="10000">0</div>
+        <div class="stat-label">Movies Analyzed</div>
+      </div>
+
+      <!-- ACCURACY -->
+      <div class="stat-card">
+        <div class="stat-icon"><i class="bi bi-cpu-fill"></i></div>
+        <div class="stat-number" data-target="92">0</div>
+        <div class="stat-label">Recommendation Accuracy %</div>
+      </div>
+
+      <!-- FEEDBACK -->
+      <div class="stat-card">
+        <div class="stat-icon"><i class="bi bi-hand-thumbs-up-fill"></i></div>
+        <div class="stat-number" data-target="96">0</div>
+        <div class="stat-label">Positive Feedback %</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== SCRIPT ===== -->
+  <script>
+    const counters = document.querySelectorAll(".stat-number");
+
+    const counterObserver = new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          const el = entry.target;
+          const target = +el.dataset.target;
+          let count = 0;
+          const step = target / 120;
+
+          const update = () => {
+            count += step;
+            if(count < target){
+              el.textContent = Math.floor(count);
+              requestAnimationFrame(update);
+            } else {
+              el.textContent = target;
+            }
+          };
+          update();
+          counterObserver.unobserve(el);
+        }
+      });
+    }, {threshold:.4});
+
+    counters.forEach(counter => counterObserver.observe(counter));
+  </script>
+
+</section>
+<!-- ================= END TRUST & STATS ================= -->
+
+
+<!-- ================= FINAL CTA SECTION ================= -->
+<section class="final-cta">
+
+  <!-- ===== STYLES ===== -->
+  <style>
+    .final-cta{
+      position:relative;
+      padding:140px 20px;
+      overflow:hidden;
+    }
+
+    /* BACKGROUND IMAGE */
+    .final-cta-bg{
+      position:absolute;
+      inset:0;
+      background-image:url('https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c');
+      background-size:cover;
+      background-position:center;
+      transform:scale(1.1);
+      animation:ctaZoom 20s ease-in-out infinite alternate;
+      z-index:1;
+    }
+
+    @keyframes ctaZoom{
+      from{transform:scale(1.1)}
+      to{transform:scale(1.2)}
+    }
+
+    /* OVERLAY */
+    .final-cta-overlay{
+      position:absolute;
+      inset:0;
+      background:linear-gradient(
+        120deg,
+        rgba(5,6,20,.9),
+        rgba(20,10,40,.85),
+        rgba(5,6,20,.92)
+      );
+      z-index:2;
+    }
+
+    /* CONTENT */
+    .final-cta-content{
+      position:relative;
+      z-index:3;
+      max-width:900px;
+      margin:auto;
+      text-align:center;
+      color:#fff;
+      animation:fadeUp 1.4s ease forwards;
+      opacity:0;
+    }
+
+    @keyframes fadeUp{
+      from{
+        opacity:0;
+        transform:translateY(30px);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    .final-cta-content h2{
+      font-size:clamp(2.4rem,5vw,3.4rem);
+      font-weight:900;
+      background:linear-gradient(90deg,#ff3d5a,#ffb703,#00f5d4);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-bottom:26px;
+    }
+
+    .final-cta-content p{
+      font-size:1.15rem;
+      line-height:1.9;
+      color:#dbe7ff;
+      margin-bottom:46px;
+    }
+
+    /* CTA BUTTON */
+    .cta-btn{
+      padding:18px 42px;
+      border-radius:50px;
+      border:none;
+      font-size:1rem;
+      font-weight:800;
+      letter-spacing:.5px;
+      background:linear-gradient(135deg,#ff3d5a,#ff006e);
+      color:#fff;
+      cursor:pointer;
+      text-decoration:none;
+      box-shadow:0 0 30px rgba(255,61,90,.7);
+      animation:pulseGlow 2.8s infinite;
+      transition:.35s;
+      display:inline-block;
+    }
+
+    .cta-btn:hover{
+      transform:scale(1.12);
+      box-shadow:0 0 50px rgba(255,61,90,1);
+    }
+
+    @keyframes pulseGlow{
+      0%{box-shadow:0 0 20px rgba(255,61,90,.5)}
+      50%{box-shadow:0 0 45px rgba(255,61,90,1)}
+      100%{box-shadow:0 0 20px rgba(255,61,90,.5)}
+    }
+  </style>
+
+  <!-- ===== BACKGROUND ===== -->
+  <div class="final-cta-bg"></div>
+  <div class="final-cta-overlay"></div>
+
+  <!-- ===== CONTENT ===== -->
+  <div class="final-cta-content">
+    <h2>Ready to Discover Your Next Favorite Movie?</h2>
+    <p>
+      Let our AI understand your taste, mood, and preferences —
+      and deliver movie recommendations made just for you.
+    </p>
+
+    <a href="{{ url_for('dashboard') }}" class="cta-btn">
+      Get Personalized Recommendations
+    </a>
+  </div>
+
+</section>
+<!-- ================= END FINAL CTA ================= -->
+
+
+
+
+{% endblock %}

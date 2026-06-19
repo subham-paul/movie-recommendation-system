@@ -1,0 +1,47 @@
+# ===============================
+# Core Web Framework
+# ===============================
+Flask==3.0.3
+Jinja2==3.1.4
+Werkzeug==3.0.3
+
+# ===============================
+# Data Handling & Processing
+# ===============================
+pandas==2.2.2
+numpy==1.26.4
+
+# ===============================
+# Recommendation Logic (Content-Based)
+# ===============================
+scikit-learn==1.5.1
+scipy==1.13.1
+
+# ===============================
+# Text Processing (for movie descriptions)
+# ===============================
+nltk==3.9.1
+regex==2024.7.24
+
+# ===============================
+# API & HTTP Requests (future movie APIs)
+# ===============================
+requests==2.32.3
+
+# ===============================
+# Visualization & Debug (optional, useful for analysis)
+# ===============================
+matplotlib==3.9.2
+seaborn==0.13.2
+
+# ===============================
+# Deployment & Environment
+# ===============================
+python-dotenv==1.0.1
+gunicorn==22.0.0
+
+# ===============================
+# Performance & Utilities
+# ===============================
+joblib==1.4.2
+tqdm==4.66.5
